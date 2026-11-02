@@ -1,0 +1,34 @@
+.primary-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.session-toolbar{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:15px}
+.session-toolbar h2,.setup-panel>h2{font:600 14px 'Segoe UI';margin:0}
+.session-toolbar p{font-size:11px;color:#8b94a2;margin:6px 0 0}
+.session-toolbar select,.plan-select-row select,.start-session-form select{background:#11151c;border:1px solid #343b48;color:#eff0f5;border-radius:6px;padding:10px 11px;font:12px 'Segoe UI';min-width:180px}
+.plan-select-row{display:flex;align-items:end;gap:18px;flex-wrap:wrap}
+.plan-select-row>label{display:grid;gap:7px;color:#aeb5c1;font-size:10px}
+.compact-plan-form{border-left:1px solid #282e39;padding-left:16px}
+.compact-plan-form input{width:145px}
+.start-session-form{margin-top:14px}
+.inline-note{font-size:10px;color:#8b94a2;margin:12px 0 0}
+.session-error{margin:0 0 14px}
+.sessions-panel{overflow:hidden}
+.sessions-panel>header{display:flex;align-items:center;justify-content:space-between;padding:17px 18px;border-bottom:1px solid #262c36}
+.sessions-panel h2{font:600 13px 'Segoe UI';margin:0}
+.sessions-panel header p{font-size:10px;color:#7e8795;margin:5px 0 0}
+.session-list{padding:12px;display:grid;gap:10px}
+.session-card{border:1px solid #292f3a;border-radius:9px;background:#141820;padding:14px 15px}
+.session-card-top{display:flex;align-items:center;gap:10px}
+.session-pc-icon{height:34px;width:34px;border-radius:9px;background:#28243a;color:#ad98ff;display:grid;place-items:center}
+.session-title{display:grid;gap:4px;flex:1}
+.session-title strong{font-size:11px}
+.session-title span{font-size:10px;color:#858e9c}
+.session-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 12px;padding:12px 0;border-top:1px solid #252b35;border-bottom:1px solid #252b35}
+.session-metrics>div{display:grid;gap:6px}
+.session-metrics span{font-size:9px;color:#808a99}
+.session-metrics strong{font:600 12px 'Segoe UI';font-variant-numeric:tabular-nums}
+.session-metrics>div:first-child strong{font:600 19px Consolas,monospace;color:#c1adff}
+.session-metrics .time-low{color:#f1a28e!important}
+.session-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.session-actions .secondary-button,.end-button{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
+.end-button{background:#382522;border:1px solid #613631;color:#efa59e;border-radius:6px;padding:8px 11px;font:500 10px 'Segoe UI'}
+.end-button:hover{background:#492c28}
+@media(max-width:720px){.session-toolbar{flex-direction:column}.session-toolbar select,.plan-select-row select{width:100%}.plan-select-row,.compact-plan-form{width:100%}.compact-plan-form{border-left:0;border-top:1px solid #282e39;padding:14px 0 0;margin-top:5px}.compact-plan-form input{width:100%}.session-metrics{gap:6px}.session-metrics>div:first-child strong{font-size:16px}}
