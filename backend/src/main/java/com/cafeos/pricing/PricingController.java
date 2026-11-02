@@ -3,6 +3,8 @@ package com.cafeos.pricing;
 import com.cafeos.common.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -34,10 +36,11 @@ public class PricingController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PricingService.PricingPlanDto> create(@Valid @RequestBody CreatePricingPlanBody body) {
         return ApiResponse.ok(service.create(new PricingService.CreatePricingPlanRequest(
-                body.branchId(), body.name(), body.hourlyRate(), body.currency())));
+                body.branchId(), body.name(), body.hourlyRate(), body.durationMinutes(), body.currency())));
     }
 
     public record CreatePricingPlanBody(@NotNull UUID branchId, @NotBlank @Size(max = 120) String name,
                                         @NotNull @DecimalMin("0.01") BigDecimal hourlyRate,
+                                        @Min(1) @Max(1440) int durationMinutes,
                                         @NotBlank @Pattern(regexp = "[A-Za-z]{3}") String currency) {}
 }

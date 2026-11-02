@@ -18,9 +18,9 @@ export default function SessionManagement() {
   const [selectedBranch, setSelectedBranch] = useState('')
   const [pcId, setPcId] = useState('')
   const [planId, setPlanId] = useState('')
-  const [minutes, setMinutes] = useState(60)
   const [planName, setPlanName] = useState('Standard')
   const [hourlyRate, setHourlyRate] = useState('100.00')
+  const [planDuration, setPlanDuration] = useState('60')
   const [formError, setFormError] = useState('')
   const [now, setNow] = useState(Date.now())
 
@@ -41,7 +41,7 @@ export default function SessionManagement() {
       client.invalidateQueries({ queryKey: ['pcs', branchId] }),
     ])
   }
-  const createPlan = useMutation({ mutationFn: createPricingPlan, onSuccess: async plan => { setPlanId(plan.id); setFormError(''); await client.invalidateQueries({ queryKey: ['pricing-plans', branchId] }) }, onError: () => setFormError('Could not save the hourly rate. Check the value and backend connection.') })
+  const createPlan = useMutation({ mutationFn: createPricingPlan, onSuccess: async () => { setFormError(''); await client.invalidateQueries({ queryKey: ['pricing-plans', branchId] }) }, onError: () => setFormError('Could not save the plan. Check the values and backend connection.') })
   const beginSession = useMutation({ mutationFn: startSession, onSuccess: async () => { setFormError(''); await refreshData() }, onError: error => { const apiMessage = axios.isAxiosError<{ error?: { message?: string } }>(error) ? error.response?.data?.error?.message : undefined; setFormError(apiMessage || 'Could not start the session. Confirm the PC is available and the rate belongs to this branch.') } })
   const command = useMutation({ mutationFn: ({ id, action }: { id: string; action: 'pause' | 'resume' | 'end' }) => sessionAction(id, action), onSuccess: async () => { setFormError(''); await refreshData() }, onError: () => setFormError('Session command failed. Refresh the session list and try again.') })
   const extend = useMutation({ mutationFn: (id: string) => extendSession(id, 1800), onSuccess: async () => { setFormError(''); await refreshData() }, onError: () => setFormError('Could not extend this session.') })
@@ -54,17 +54,18 @@ export default function SessionManagement() {
   }
   function savePlan(event: FormEvent) {
     event.preventDefault()
-    if (branchId) createPlan.mutate({ branchId, name: planName.trim(), hourlyRate: Number(hourlyRate), currency: 'INR' })
+    if (branchId) createPlan.mutate({ branchId, name: planName.trim(), hourlyRate: Number(hourlyRate), durationMinutes: Number(planDuration), currency: 'INR' })
   }
   function begin(event: FormEvent) {
     event.preventDefault()
     setFormError('')
     const selectedPcId = pcId || pcs.data?.find(pc => pc.status === 'AVAILABLE')?.id
-    const activePlanId = planId || activePlans[0]?.id
-    if (selectedPcId && activePlanId) {
-      beginSession.mutate({ pcId: selectedPcId, pricingPlanId: activePlanId, allocatedSeconds: minutes * 60 })
+    const selectedPlan = activePlans.find(plan => plan.id === planId)
+    const selectedDurationMinutes = selectedPlan ? Number(selectedPlan.durationMinutes) || 60 : 0
+    if (selectedPcId && selectedPlan && selectedDurationMinutes > 0) {
+      beginSession.mutate({ pcId: selectedPcId, pricingPlanId: selectedPlan.id, allocatedSeconds: selectedDurationMinutes * 60 })
     } else {
-      setFormError('Select an available PC and an hourly rate before starting the session.')
+      setFormError('Select an available PC and plan before starting the session.')
     }
   }
 
@@ -76,9 +77,9 @@ export default function SessionManagement() {
     {credentialsSet && branches.isSuccess && branches.data.length === 0 && <section className="panel setup-panel"><h2>Create a branch first</h2><p>Open Gaming PCs to set up your cafe branch before configuring sessions.</p></section>}
     {branchId && <>
         <section className="panel setup-panel"><div className="session-toolbar"><div><h2>Branch and hourly rate</h2><p>Billing uses the rate snapshot saved when a session starts.</p></div><select aria-label="Branch" value={branchId} onChange={e => { setSelectedBranch(e.target.value); setPcId(''); setPlanId('') }}>{branches.data?.map(branch => <option key={branch.id} value={branch.id}>{branch.name}</option>)}</select></div>
-        {plans.isLoading ? <p className="inline-note">Loading hourly rates…</p> : activePlans.length === 0 ? <form className="inline-form" onSubmit={savePlan}><label>Rate name<input value={planName} onChange={e => setPlanName(e.target.value)} required maxLength={120}/></label><label>Hourly rate (INR)<input type="number" min="0.01" step="0.01" value={hourlyRate} onChange={e => setHourlyRate(e.target.value)} required/></label><button className="primary-button" disabled={createPlan.isPending}>Add hourly rate</button></form> : <div className="plan-select-row"><label>Hourly rate<select value={planId || activePlans[0].id} onChange={e => setPlanId(e.target.value)}>{activePlans.map(plan => <option key={plan.id} value={plan.id}>{plan.name} · {plan.currency} {Number(plan.hourlyRate).toFixed(2)}/hour</option>)}</select></label><form className="inline-form compact-plan-form" onSubmit={savePlan}><input aria-label="New rate name" value={planName} onChange={e => setPlanName(e.target.value)} placeholder="New rate name" maxLength={120}/><input aria-label="New hourly rate" type="number" min="0.01" step="0.01" value={hourlyRate} onChange={e => setHourlyRate(e.target.value)}/><button className="secondary-button" disabled={createPlan.isPending}>＋ Save another rate</button></form></div>}
+        {plans.isLoading ? <p className="inline-note">Loading plans…</p> : <form className="inline-form" onSubmit={savePlan}><label>Plan name<input value={planName} onChange={e => setPlanName(e.target.value)} required maxLength={120}/></label><label>Rate (INR/hour)<input type="number" min="0.01" step="0.01" value={hourlyRate} onChange={e => setHourlyRate(e.target.value)} required/></label><label>Duration (minutes)<input type="number" min="1" max="1440" value={planDuration} onChange={e => setPlanDuration(e.target.value)} required/></label><button className="primary-button" disabled={createPlan.isPending}>Add plan</button></form>}
       </section>
-      {activePlans.length > 0 && <section className="panel setup-panel"><h2>Start a session</h2><form className="inline-form start-session-form" onSubmit={begin}><label>Available PC<select value={pcId || pcs.data?.find(pc => pc.status === 'AVAILABLE')?.id || ''} onChange={e => setPcId(e.target.value)} required><option value="" disabled>Select a PC</option>{pcs.data?.filter(pc => pc.status === 'AVAILABLE').map(pc => <option key={pc.id} value={pc.id}>{pc.name}</option>)}</select></label><label>Duration in minutes<input type="number" min="1" max="1440" value={minutes} onChange={e => setMinutes(Number(e.target.value))} required/></label><button className="primary-button" disabled={beginSession.isPending || !pcs.data?.some(pc => pc.status === 'AVAILABLE')}><Play size={14}/> Start session</button></form>{!pcs.data?.some(pc => pc.status === 'AVAILABLE') && <p className="inline-note">No PCs are currently available.</p>}</section>}
+      {activePlans.length > 0 && <section className="panel setup-panel"><h2>Start a session</h2><form className="inline-form start-session-form" onSubmit={begin}><label>Available PC<select value={pcId || pcs.data?.find(pc => pc.status === 'AVAILABLE')?.id || ''} onChange={e => setPcId(e.target.value)} required><option value="" disabled>Select a PC</option>{pcs.data?.filter(pc => pc.status === 'AVAILABLE').map(pc => <option key={pc.id} value={pc.id}>{pc.name}</option>)}</select></label><label>Plan / hourly rate<select value={planId} onChange={e => setPlanId(e.target.value)} required><option value="" disabled>Select a plan</option>{activePlans.map(plan => <option key={plan.id} value={plan.id}>{plan.name} · {plan.currency} {Number(plan.hourlyRate).toFixed(2)}/hour · {Number(plan.durationMinutes) || 60} min</option>)}</select></label><button className="primary-button" disabled={beginSession.isPending || !pcs.data?.some(pc => pc.status === 'AVAILABLE') || !planId}><Play size={14}/> Start session</button></form>{!pcs.data?.some(pc => pc.status === 'AVAILABLE') && <p className="inline-note">No PCs are currently available.</p>}</section>}
       {formError && <div className="form-error session-error">{formError}</div>}
       <section className="panel sessions-panel"><header><div><h2>Session history</h2><p>Active timers refresh from the backend every five seconds.</p></div><span className="local-badge"><i/> Local-first</span></header>
         {sessions.isLoading ? <div className="empty-state">Loading sessions…</div> : sessions.isError ? <div className="empty-state">Could not load sessions.</div> : sessions.data?.length ? <div className="session-list">{sessions.data.map(session => {

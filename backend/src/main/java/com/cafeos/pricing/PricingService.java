@@ -27,19 +27,19 @@ public class PricingService {
     @Transactional
     public PricingPlanDto create(CreatePricingPlanRequest request) {
         Branch branch = requireBranch(request.branchId());
-        return PricingPlanDto.from(plans.save(new PricingPlan(branch, request.name().trim(),
-                request.hourlyRate(), request.currency().toUpperCase(java.util.Locale.ROOT))));
+        return PricingPlanDto.from(plans.save(new PricingPlan(branch, request.name().trim(), request.hourlyRate(),
+                request.durationMinutes(), request.currency().toUpperCase(java.util.Locale.ROOT))));
     }
 
     private Branch requireBranch(UUID id) {
         return branches.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch not found"));
     }
 
-    public record CreatePricingPlanRequest(UUID branchId, String name, BigDecimal hourlyRate, String currency) {}
-    public record PricingPlanDto(UUID id, UUID branchId, String name, BigDecimal hourlyRate, String currency, boolean active) {
+    public record CreatePricingPlanRequest(UUID branchId, String name, BigDecimal hourlyRate, int durationMinutes, String currency) {}
+    public record PricingPlanDto(UUID id, UUID branchId, String name, BigDecimal hourlyRate, int durationMinutes, String currency, boolean active) {
         static PricingPlanDto from(PricingPlan plan) {
             return new PricingPlanDto(plan.getId(), plan.getBranch().getId(), plan.getName(),
-                    plan.getHourlyRate(), plan.getCurrency(), plan.isActive());
+                    plan.getHourlyRate(), plan.getDurationMinutes(), plan.getCurrency(), plan.isActive());
         }
     }
 }

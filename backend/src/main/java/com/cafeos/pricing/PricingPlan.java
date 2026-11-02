@@ -28,6 +28,8 @@ public class PricingPlan {
     private String name;
     @Column(name = "hourly_rate", nullable = false, precision = 12, scale = 2)
     private BigDecimal hourlyRate;
+    @Column(name = "duration_minutes", nullable = false)
+    private int durationMinutes;
     @JdbcTypeCode(SqlTypes.CHAR)
     @Column(nullable = false, length = 3, columnDefinition = "CHAR(3)")
     private String currency;
@@ -38,13 +40,18 @@ public class PricingPlan {
 
     protected PricingPlan() {}
     public PricingPlan(Branch branch, String name, BigDecimal hourlyRate, String currency) {
-        this.branch = branch; this.name = name; this.hourlyRate = hourlyRate; this.currency = currency;
+        this(branch, name, hourlyRate, 60, currency);
+    }
+    public PricingPlan(Branch branch, String name, BigDecimal hourlyRate, int durationMinutes, String currency) {
+        this.branch = branch; this.name = name; this.hourlyRate = hourlyRate;
+        this.durationMinutes = durationMinutes; this.currency = currency;
     }
     @PrePersist void onCreate() { if (createdAt == null) createdAt = Instant.now(); }
     public UUID getId() { return id; }
     public Branch getBranch() { return branch; }
     public String getName() { return name; }
     public BigDecimal getHourlyRate() { return hourlyRate; }
+    public int getDurationMinutes() { return durationMinutes; }
     public String getCurrency() { return currency; }
     public boolean isActive() { return active; }
 }

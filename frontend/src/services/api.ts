@@ -10,7 +10,7 @@ export type Health = { status: string; time: string }
 export type Branch = { id: string; cafeName: string; name: string; timezone: string }
 export type GamingPc = { id: string; branchId: string; branchName: string; name: string; status: 'AVAILABLE' | 'OCCUPIED' | 'OFFLINE' | 'MAINTENANCE'; hostname: string | null; createdAt: string; lastHeartbeatAt: string | null; agentTokenIssued: boolean }
 export type AgentToken = { pcId: string; token: string }
-export type PricingPlan = { id: string; branchId: string; name: string; hourlyRate: number; currency: string; active: boolean }
+export type PricingPlan = { id: string; branchId: string; name: string; hourlyRate: number; durationMinutes: number; currency: string; active: boolean }
 export type GamingSession = {
   id: string; branchId: string; pcId: string; pcName: string; pricingPlanId: string; pricingPlanName: string
   status: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'; hourlyRate: number; currency: string
@@ -61,7 +61,7 @@ export async function getPricingPlans(branchId: string): Promise<PricingPlan[]> 
   const response = await api.get<ApiEnvelope<PricingPlan[]>>('/pricing-plans', { params: { branchId } })
   return response.data.data
 }
-export async function createPricingPlan(input: { branchId: string; name: string; hourlyRate: number; currency: string }): Promise<PricingPlan> {
+export async function createPricingPlan(input: { branchId: string; name: string; hourlyRate: number; durationMinutes: number; currency: string }): Promise<PricingPlan> {
   const response = await api.post<ApiEnvelope<PricingPlan>>('/pricing-plans', input)
   return response.data.data
 }
