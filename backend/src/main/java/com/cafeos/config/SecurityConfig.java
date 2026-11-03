@@ -23,6 +23,7 @@ public class SecurityConfig {
         return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/health", "/actuator/health", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/agent/enroll").permitAll()
                         .requestMatchers("/api/agent/**").hasRole("AGENT")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

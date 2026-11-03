@@ -22,7 +22,7 @@ public class PcService {
     @Transactional(readOnly = true)
     public List<PcDto> list(UUID branchId) {
         requireBranch(branchId);
-        return pcs.findAllByBranchIdOrderByNameAsc(branchId).stream().map(PcDto::from).toList();
+        return pcs.findAllByBranchIdAndDeletedFalseOrderByNameAsc(branchId).stream().map(PcDto::from).toList();
     }
 
     @Transactional
@@ -60,6 +60,14 @@ public class PcService {
             pc.update(name, clean(request.hostname()), request.status());
         }
         return PcDto.from(pc);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        GamingPc pc = pcs.findByIdForUpdate(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "PC not found"));
+        // Keep the PC row because heartbeats and sessions reference it. Deletion is an archive.
+        pc.markDeleted();
     }
 
     private Branch requireBranch(UUID id) {

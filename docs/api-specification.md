@@ -16,7 +16,9 @@ Planned endpoints: `POST /auth/login`, `/auth/refresh`, `/auth/logout`. Access J
 | GET | `/pcs?branchId={uuid}` | List PCs for a branch |
 | POST | `/pcs` | Register a PC in a branch |
 | PUT | `/pcs/{id}` | Rename a PC or set AVAILABLE/OFFLINE/MAINTENANCE |
+| DELETE | `/pcs/{id}` | Remove a PC; PCs with session history are archived |
 | POST | `/pcs/{id}/agent-token` | Issue or rotate a device bearer token; shown once, `Cache-Control: no-store` |
+| POST | `/agent/enroll` | Public first-run enrollment; reuses a machine/hostname match or creates a PC automatically in the supplied branch, or the only branch |
 | POST | `/agent/register` | Bind authenticated agent hostname to its token-bound PC |
 | POST | `/agent/heartbeat` | Store authenticated CPU/memory heartbeat |
 | GET | `/pricing-plans?branchId={uuid}` | List branch hourly rate plans |
@@ -39,7 +41,7 @@ The backend checks for expired ACTIVE sessions every second and recovers overdue
 
 ## Device and realtime contract
 
-Agent enrollment is implemented as an owner-authenticated token issuance operation for a known PC. The server generates a 256-bit random token, stores only its SHA-256 hash, and returns the plaintext once. The agent authenticates using `Authorization: Bearer <token>`; the authenticated token determines its PC ID. Registration body: `{hostname, os, ipAddress, agentVersion}`. Heartbeat body: `{agentStatus, agentVersion, cpuPercent, memoryPercent}` where CPU and memory are 0–100. The backend records server receipt time; PCs with no heartbeat for 45 seconds are marked `OFFLINE`. The Python agent sends every 15 seconds with retry/backoff.
+Agent enrollment is a public first-run operation for the pilot. Request body: `{machineId, hostname, os, ipAddress, agentVersion, branchId?}`. The server reuses an active PC matching the persistent machine ID or hostname; otherwise it creates a PC in the supplied branch, or in the only configured branch when `branchId` is omitted. If multiple branches exist without a branch ID, enrollment returns `409 CONFLICT`. The response is `201` with `{pcId, token}`; the server stores only the token's SHA-256 hash. The agent stores the token and machine ID in `%LOCALAPPDATA%\CafeOS\agent-state.json` and uses `Authorization: Bearer <token>` for authenticated calls. Registration body: `{hostname, os, ipAddress, agentVersion}`. Heartbeat body: `{agentStatus, agentVersion, cpuPercent, memoryPercent}` where CPU and memory are 0–100. The backend records server receipt time; AVAILABLE PCs with no heartbeat for 45 seconds are marked `OFFLINE`. The Python agent sends every 15 seconds with retry/backoff and re-enrolls after HTTP 401/403.
 
 PC list items also return `lastHeartbeatAt` and `agentTokenIssued`; the latter indicates whether a credential exists but never reveals it. Registration stores OS/IP as heartbeat diagnostic details and binds the reported hostname to the token-bound PC.
 
@@ -47,4 +49,4 @@ WebSocket events include `PC_REGISTERED`, `PC_STATUS_UPDATED`, `SESSION_STARTED`
 
 OpenAPI UI is available at `/swagger-ui/index.html`; generated docs are under `/v3/api-docs`.
 
-The frontend asks for the temporary Basic credentials on the Gaming PCs page and keeps them in memory for that browser session. Agent token rotation revokes the previous token. The agent stores its token in a local `.env` during this pilot skeleton; use TLS and OS-managed secret storage before deployment.
+The frontend asks for the temporary Basic credentials on the Gaming PCs page and keeps them in memory for that browser session. Agent token rotation revokes the previous token. The current agent stores its token locally in `%LOCALAPPDATA%\CafeOS\agent-state.json`; use TLS and OS-managed secret storage before deployment.

@@ -8,7 +8,7 @@ from agent.core.config import AgentConfig
 class HttpApiClient:
     def __init__(self, config: AgentConfig) -> None:
         if not config.agent_token:
-            raise ValueError("CAFEOS_AGENT_TOKEN is required")
+            raise ValueError("An enrolled agent token is required")
         self._client = httpx.AsyncClient(
             base_url=config.server_url.rstrip("/"),
             headers={"Authorization": f"Bearer {config.agent_token}"},

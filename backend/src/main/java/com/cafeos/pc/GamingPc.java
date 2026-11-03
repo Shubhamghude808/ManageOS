@@ -32,10 +32,14 @@ public class GamingPc {
     private String hostname;
     @Column(name = "agent_credential_hash", length = 255)
     private String agentCredentialHash;
+    @Column(name = "agent_machine_id", length = 128)
+    private String agentMachineId;
     @Column(name = "last_heartbeat_at")
     private Instant lastHeartbeatAt;
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+    @Column(nullable = false)
+    private boolean deleted;
 
     protected GamingPc() {}
     public GamingPc(Branch branch, String name, String hostname) {
@@ -50,8 +54,16 @@ public class GamingPc {
     public Instant getCreatedAt() { return createdAt; }
     public Instant getLastHeartbeatAt() { return lastHeartbeatAt; }
     public String getAgentCredentialHash() { return agentCredentialHash; }
+    public String getAgentMachineId() { return agentMachineId; }
     public boolean hasAgentCredential() { return agentCredentialHash != null; }
+    public boolean isDeleted() { return deleted; }
     public void setAgentCredentialHash(String hash) { this.agentCredentialHash = hash; }
+    public void setAgentMachineId(String machineId) { this.agentMachineId = machineId; }
+    public void markDeleted() {
+        this.deleted = true;
+        this.agentCredentialHash = null;
+        this.agentMachineId = null;
+    }
     public void registerAgent(String hostname) { this.hostname = hostname; }
     public void recordHeartbeat(Instant receivedAt) {
         this.lastHeartbeatAt = receivedAt;

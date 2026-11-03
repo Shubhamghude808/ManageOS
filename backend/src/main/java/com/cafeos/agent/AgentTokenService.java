@@ -2,6 +2,8 @@ package com.cafeos.agent;
 
 import com.cafeos.pc.GamingPc;
 import com.cafeos.pc.GamingPcRepository;
+import com.cafeos.branch.Branch;
+import com.cafeos.branch.BranchRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,9 +20,13 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AgentTokenService {
     private final GamingPcRepository pcs;
+    private final BranchRepository branches;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    public AgentTokenService(GamingPcRepository pcs) { this.pcs = pcs; }
+    public AgentTokenService(GamingPcRepository pcs, BranchRepository branches) {
+        this.pcs = pcs;
+        this.branches = branches;
+    }
 
     @Transactional
     public IssuedAgentToken issue(UUID pcId) {
@@ -33,10 +39,48 @@ public class AgentTokenService {
         return new IssuedAgentToken(pc.getId(), token);
     }
 
+    @Transactional
+    public IssuedAgentToken issueForEnrollment(String machineId, String hostname, UUID branchId) {
+        GamingPc pc = pcs.findByAgentMachineIdAndDeletedFalse(machineId)
+                .or(() -> pcs.findByHostnameIgnoreCaseAndDeletedFalse(hostname))
+                .orElseGet(() -> createPcForEnrollment(machineId, hostname, branchId));
+        if (pc.getAgentMachineId() != null && !pc.getAgentMachineId().equals(machineId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Gaming PC is already enrolled to another computer");
+        }
+        pc.setAgentMachineId(machineId);
+        return issue(pc.getId());
+    }
+
+    private GamingPc createPcForEnrollment(String machineId, String hostname, UUID branchId) {
+        Branch branch;
+        if (branchId != null) {
+            branch = branches.findById(branchId).orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Branch not found"));
+        } else {
+            var availableBranches = branches.findAllByOrderByNameAsc();
+            if (availableBranches.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Create a cafe branch before starting an agent");
+            }
+            if (availableBranches.size() > 1) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Set CAFEOS_BRANCH_ID when the cafe has multiple branches");
+            }
+            branch = availableBranches.getFirst();
+        }
+
+        String baseName = hostname.trim().isEmpty() ? "Gaming PC" : hostname.trim();
+        String name = baseName.length() > 100 ? baseName.substring(0, 100) : baseName;
+        if (pcs.existsByBranchIdAndNameIgnoreCaseAndDeletedFalse(branch.getId(), name)) {
+            name = "Gaming PC " + machineId.substring(0, Math.min(8, machineId.length()));
+        }
+        return pcs.save(new GamingPc(branch, name, hostname.trim()));
+    }
+
     @Transactional(readOnly = true)
     public Optional<UUID> authenticate(String token) {
         if (token == null || token.isBlank()) return Optional.empty();
-        return pcs.findByAgentCredentialHash(hash(token)).map(GamingPc::getId);
+        return pcs.findByAgentCredentialHashAndDeletedFalse(hash(token)).map(GamingPc::getId);
     }
 
     private static String hash(String token) {

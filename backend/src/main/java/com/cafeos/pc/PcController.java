@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +39,12 @@ public class PcController {
     @PutMapping("/{id}")
     public ApiResponse<PcService.PcDto> update(@PathVariable UUID id, @Valid @RequestBody UpdatePcBody body) {
         return ApiResponse.ok(service.update(id, new PcService.UpdatePcRequest(body.branchId(), body.name(), body.hostname(), body.status())));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        service.delete(id);
     }
 
     public record CreatePcBody(@NotNull UUID branchId, @NotBlank @Size(max = 100) String name, @Size(max = 255) String hostname) {}

@@ -1,0 +1,1 @@
+ALTER TABLE gaming_pcs ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT false;

@@ -7,6 +7,7 @@ class AgentConfig(BaseSettings):
 
     server_url: str = "http://localhost:8080"
     pc_id: str | None = None
+    branch_id: str | None = None
     agent_token: str | None = Field(default=None, repr=False)
     log_level: str = "INFO"
     heartbeat_interval_seconds: int = Field(default=15, ge=5, le=300)
