@@ -14,6 +14,8 @@
 .pc-list-panel>header{min-height:64px}
 .pc-list-panel>header .text-button{display:flex;align-items:center;gap:6px;cursor:pointer}
 .pc-table{padding:0 15px}
+.pc-delete-row-actions{display:flex;flex-wrap:wrap;gap:8px;padding:12px 15px;border-bottom:1px solid #252b35}
+.pc-delete-row-actions .secondary-button{display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer}
 .pc-row{display:flex;align-items:center;gap:12px;min-height:64px;border-bottom:1px solid #252b35}
 .pc-row:last-child{border-bottom:0}
 .pc-icon{width:34px;height:34px;border-radius:9px;background:#222735;color:#a891ff;display:grid;place-items:center}
@@ -26,6 +28,7 @@
 .status-pill.offline{color:#e0a39e;background:#382522}
 .status-pill.maintenance{color:#e2c17a;background:#352f20}
 .pc-row .icon-button{cursor:pointer;padding:7px}
+.pc-row .danger-button{color:#e9a2a2}
 .token-panel{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:14px 16px 16px 60px;background:#131720;border-bottom:1px solid #252b35}
 .token-panel>div{min-width:0;flex:1}
 .token-panel strong,.token-panel span{display:block}

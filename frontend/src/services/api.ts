@@ -53,6 +53,9 @@ export async function updatePc(id: string, input: { branchId: string; name: stri
   const response = await api.put<ApiEnvelope<GamingPc>>(`/pcs/${id}`, input)
   return response.data.data
 }
+export async function deletePc(id: string): Promise<void> {
+  await api.delete(`/pcs/${id}`)
+}
 export async function issueAgentToken(pcId: string): Promise<AgentToken> {
   const response = await api.post<ApiEnvelope<AgentToken>>(`/pcs/${pcId}/agent-token`)
   return response.data.data

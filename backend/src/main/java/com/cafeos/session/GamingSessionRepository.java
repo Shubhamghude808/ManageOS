@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface GamingSessionRepository extends JpaRepository<GamingSession, UUID> {
     List<GamingSession> findAllByBranchIdOrderByStartedAtDesc(UUID branchId);
     List<GamingSession> findAllByStatus(SessionStatus status);
+    boolean existsByPcId(UUID pcId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select session from GamingSession session where session.id = :id")
