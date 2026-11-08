@@ -66,8 +66,11 @@ public class GamingPc {
     }
     public void registerAgent(String hostname) { this.hostname = hostname; }
     public void recordHeartbeat(Instant receivedAt) {
+        recordHeartbeat(receivedAt, false);
+    }
+    public void recordHeartbeat(Instant receivedAt, boolean occupied) {
         this.lastHeartbeatAt = receivedAt;
-        if (this.status == PcStatus.OFFLINE) this.status = PcStatus.AVAILABLE;
+        if (this.status == PcStatus.OFFLINE) this.status = occupied ? PcStatus.OCCUPIED : PcStatus.AVAILABLE;
     }
     public void markOccupied() { this.status = PcStatus.OCCUPIED; }
     public void releaseFromSession(Instant at) {

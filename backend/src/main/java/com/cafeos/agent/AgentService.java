@@ -5,6 +5,7 @@ import com.cafeos.pc.GamingPcRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,27 +23,34 @@ public class AgentService {
 
     @Transactional
     public AgentAcknowledgement register(UUID pcId, AgentRegistrationRequest request) {
-        GamingPc pc = findPc(pcId);
+        UUID authenticatedPcId = requirePcId(pcId);
+        GamingPc pc = findPc(authenticatedPcId);
         Instant receivedAt = Instant.now();
         pc.registerAgent(request.hostname().trim());
-        pc.recordHeartbeat(receivedAt);
+        pc.recordHeartbeat(receivedAt, pcs.hasOpenSession(authenticatedPcId));
         heartbeats.save(new PcHeartbeat(pc, receivedAt, request.agentVersion(), null, null,
                 Map.of("os", request.os(), "ipAddress", request.ipAddress())));
-        return new AgentAcknowledgement(pcId, "REGISTERED", receivedAt);
+        return new AgentAcknowledgement(authenticatedPcId, "REGISTERED", receivedAt);
     }
 
     @Transactional
     public AgentAcknowledgement heartbeat(UUID pcId, AgentHeartbeatRequest request) {
-        GamingPc pc = findPc(pcId);
+        UUID authenticatedPcId = requirePcId(pcId);
+        GamingPc pc = findPc(authenticatedPcId);
         Instant receivedAt = Instant.now();
-        pc.recordHeartbeat(receivedAt);
+        pc.recordHeartbeat(receivedAt, pcs.hasOpenSession(authenticatedPcId));
         heartbeats.save(new PcHeartbeat(pc, receivedAt, request.agentVersion(), request.cpuPercent(),
                 request.memoryPercent(), Map.of("agentStatus", request.agentStatus())));
-        return new AgentAcknowledgement(pcId, "RECEIVED", receivedAt);
+        return new AgentAcknowledgement(authenticatedPcId, "RECEIVED", receivedAt);
     }
 
     private GamingPc findPc(UUID pcId) {
-        return pcs.findById(pcId).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unknown agent"));
+        UUID requiredPcId = requirePcId(pcId);
+        return pcs.findById(requiredPcId).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unknown agent"));
+    }
+
+    private static UUID requirePcId(UUID pcId) {
+        return Objects.requireNonNull(pcId, "Authenticated agent PC id is required");
     }
 
     public record AgentRegistrationRequest(String hostname, String os, String ipAddress, String agentVersion) {}

@@ -25,8 +25,8 @@ public interface GamingPcRepository extends JpaRepository<GamingPc, UUID> {
     Optional<GamingPc> findByHostnameIgnoreCaseAndDeletedFalse(String hostname);
 
     @Modifying
-    @Query(value = "UPDATE gaming_pcs SET status = 'OFFLINE' WHERE status = 'AVAILABLE' AND last_heartbeat_at IS NOT NULL AND last_heartbeat_at < :cutoff", nativeQuery = true)
-    int markStaleAvailableAsOffline(@Param("cutoff") java.time.Instant cutoff);
+    @Query(value = "UPDATE gaming_pcs SET status = 'OFFLINE' WHERE status IN ('AVAILABLE', 'OCCUPIED') AND last_heartbeat_at IS NOT NULL AND last_heartbeat_at < :cutoff", nativeQuery = true)
+    int markStaleAgentsAsOffline(@Param("cutoff") java.time.Instant cutoff);
 
     @Query(value = "SELECT EXISTS (SELECT 1 FROM gaming_sessions WHERE pc_id = :pcId AND status IN ('ACTIVE', 'PAUSED'))", nativeQuery = true)
     boolean hasOpenSession(@Param("pcId") UUID pcId);

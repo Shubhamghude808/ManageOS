@@ -35,6 +35,6 @@ erDiagram
 - Foreign keys bind each operational row to its branch, PC or session. Reports use `(branch_id, started_at)` and heartbeat history uses `(pc_id, received_at DESC)` indexes.
 - `sync_events` is an outbox; event creation must share a transaction with the business write.
 - Agent bearer secrets are generated with 256 bits of randomness; only a SHA-256 hex digest is stored in `gaming_pcs.agent_credential_hash`. A partial unique index protects token uniqueness.
-- `gaming_pcs.last_heartbeat_at` stores server receipt time. The scheduled liveness check marks `AVAILABLE` PCs `OFFLINE` when their last heartbeat is older than 45 seconds; it does not override `MAINTENANCE` or `OCCUPIED`.
+- `gaming_pcs.last_heartbeat_at` stores server receipt time. The scheduled liveness check marks `AVAILABLE` and `OCCUPIED` PCs `OFFLINE` when their last heartbeat is older than 45 seconds; it does not override `MAINTENANCE`.
 
 Migrations V1–V4 create the foundation schema, case-insensitive cafe/branch/PC name indexes, and agent heartbeat support. Application-level session state transition validation and heartbeat retention/partitioning policies remain future work.

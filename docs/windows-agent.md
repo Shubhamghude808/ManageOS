@@ -18,14 +18,14 @@ sequenceDiagram
     Agent->>API: POST /agent/heartbeat (Bearer token, CPU/memory)
     API->>DB: Save metrics and server receive time
   end
-  API->>DB: Mark stale AVAILABLE PCs OFFLINE after 45 seconds
+API->>DB: Mark stale AVAILABLE/OCCUPIED PCs OFFLINE after 45 seconds
 ```
 
 ## Device authentication and data
 
 On first launch, the agent sends its hostname and a generated persistent machine ID to `/api/agent/enroll`. The server reuses a matching PC or creates one automatically in the configured branch. If no branch ID is configured, the server uses the only branch; configure `CAFEOS_BRANCH_ID` when there are multiple branches. The agent stores the returned token under `%LOCALAPPDATA%\CafeOS\agent-state.json` and uses it automatically on later launches. Tokens contain 256 bits of randomness; PostgreSQL stores only their SHA-256 hash. Agent endpoints accept bearer credentials only and derive the PC ID from the authenticated token; clients cannot choose another PC ID in the request body.
 
-Registration sends hostname, OS, IP address, and agent version. Heartbeats report agent status, version, CPU and memory percentages. The backend uses its own UTC receipt time and stores samples in `pc_heartbeats`; the dashboard reads the latest heartbeat timestamp from `gaming_pcs.last_heartbeat_at`. A scheduled check marks an AVAILABLE PC `OFFLINE` after 45 seconds without a heartbeat. Heartbeats do not override `MAINTENANCE` or `OCCUPIED` states.
+Registration sends hostname, OS, IP address, and agent version. Heartbeats report agent status, version, CPU and memory percentages. The backend uses its own UTC receipt time and stores samples in `pc_heartbeats`; the dashboard reads the latest heartbeat timestamp from `gaming_pcs.last_heartbeat_at`. A scheduled check marks an AVAILABLE or OCCUPIED PC `OFFLINE` after 45 seconds without a heartbeat. Heartbeats do not override `MAINTENANCE` state.
 
 PC deletion is a soft delete so session history remains intact. Archived PCs no longer reserve their machine identity or display name; the same computer can therefore enroll again after deletion.
 

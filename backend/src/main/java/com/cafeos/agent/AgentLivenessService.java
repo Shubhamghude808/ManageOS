@@ -14,6 +14,6 @@ public class AgentLivenessService {
     @Scheduled(fixedDelay = 15_000)
     @Transactional
     public void markStaleAgentsOffline() {
-        pcs.markStaleAvailableAsOffline(Instant.now().minusSeconds(45));
+        pcs.markStaleAgentsAsOffline(Instant.now().minusSeconds(45));
     }
 }
