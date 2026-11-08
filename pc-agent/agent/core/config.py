@@ -11,3 +11,8 @@ class AgentConfig(BaseSettings):
     agent_token: str | None = Field(default=None, repr=False)
     log_level: str = "INFO"
     heartbeat_interval_seconds: int = Field(default=15, ge=5, le=300)
+    request_timeout_seconds: float = Field(default=10.0, gt=1, le=120)
+    verify_tls: bool = True
+    agent_version: str = "0.2.0"
+    log_file: str | None = None
+    allow_plaintext_token_fallback: bool = False

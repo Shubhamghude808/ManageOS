@@ -1,6 +1,7 @@
 import json
 import os
 import platform
+import tempfile
 import uuid
 from pathlib import Path
 from typing import Any
@@ -25,9 +26,18 @@ def load_state() -> dict[str, Any]:
 
 def save_state(state: dict[str, Any]) -> None:
     path = state_path()
-    temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(state), encoding="utf-8")
-    temporary.replace(path)
+    fd, temporary_name = tempfile.mkstemp(prefix="agent-state-", suffix=".tmp", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(state, handle, separators=(",", ":"))
+            handle.flush()
+            os.fsync(handle.fileno())
+        if platform.system() == "Windows":
+            os.chmod(temporary, 0o600)
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def machine_id(state: dict[str, Any]) -> str:

@@ -1,6 +1,6 @@
-# CafeOS Windows Agent (pilot process)
+# CafeOS Windows Agent
 
-Python 3.12 foreground process for Windows 10/11. It registers the provisioned PC, sends CPU/memory heartbeats every 15 seconds, and retries network errors with bounded exponential backoff. It does not install a Windows service or tray UI yet.
+Python 3.12 agent for Windows 10/11. It registers the PC, sends CPU/memory heartbeats, retries network errors with bounded exponential backoff, and can run as a foreground process, Windows Service, or optional user-session tray process.
 
 Create a local `.env` from `.env.example`, set the server URL, and then run:
 

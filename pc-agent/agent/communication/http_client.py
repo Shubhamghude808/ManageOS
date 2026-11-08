@@ -12,7 +12,8 @@ class HttpApiClient:
         self._client = httpx.AsyncClient(
             base_url=config.server_url.rstrip("/"),
             headers={"Authorization": f"Bearer {config.agent_token}"},
-            timeout=httpx.Timeout(5.0),
+            timeout=httpx.Timeout(config.request_timeout_seconds),
+            verify=config.verify_tls,
         )
 
     async def post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:

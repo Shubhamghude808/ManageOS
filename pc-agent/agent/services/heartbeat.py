@@ -7,12 +7,13 @@ from agent.services.pc_info import collect_pc_info
 
 
 class HeartbeatService:
-    def __init__(self, client: ApiClient, expected_pc_id: str | None = None) -> None:
+    def __init__(self, client: ApiClient, expected_pc_id: str | None = None, agent_version: str = "0.2.0") -> None:
         self._client = client
         self._expected_pc_id = expected_pc_id
+        self._agent_version = agent_version
 
     async def register(self) -> dict[str, Any]:
-        payload = RegistrationPayload(**collect_pc_info())
+        payload = RegistrationPayload(**collect_pc_info(), agent_version=self._agent_version)
         result = await self._client.post("/api/agent/register", payload.model_dump(by_alias=True))
         if self._expected_pc_id and result.get("pcId") != self._expected_pc_id:
             raise RuntimeError("Agent token is bound to a different PC than CAFEOS_PC_ID")
@@ -21,6 +22,7 @@ class HeartbeatService:
     async def send(self) -> dict[str, Any]:
         """Submit a heartbeat through the configured transport."""
         validated = HeartbeatPayload(
+            agent_version=self._agent_version,
             cpu_percent=psutil.cpu_percent(interval=0.1),
             memory_percent=psutil.virtual_memory().percent,
         )

@@ -4,8 +4,12 @@ import httpx
 
 
 class EnrollmentClient:
-    def __init__(self, server_url: str) -> None:
-        self._client = httpx.AsyncClient(base_url=server_url.rstrip("/"), timeout=httpx.Timeout(5.0))
+    def __init__(self, server_url: str, timeout_seconds: float = 10.0, verify_tls: bool = True) -> None:
+        self._client = httpx.AsyncClient(
+            base_url=server_url.rstrip("/"),
+            timeout=httpx.Timeout(timeout_seconds),
+            verify=verify_tls,
+        )
 
     async def enroll(self, payload: dict[str, Any]) -> dict[str, Any]:
         response = await self._client.post("/api/agent/enroll", json=payload)
