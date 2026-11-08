@@ -22,5 +22,11 @@ class HttpApiClient:
         body = response.json()
         return body["data"]
 
+    async def get(self, path: str) -> dict[str, Any] | None:
+        response = await self._client.get(path)
+        response.raise_for_status()
+        body = response.json()
+        return body["data"]
+
     async def close(self) -> None:
         await self._client.aclose()

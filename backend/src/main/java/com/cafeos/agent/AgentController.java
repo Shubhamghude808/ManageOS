@@ -1,6 +1,7 @@
 package com.cafeos.agent;
 
 import com.cafeos.common.ApiResponse;
+import com.cafeos.session.SessionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,6 +38,11 @@ public class AgentController {
             @AuthenticationPrincipal UUID pcId, @Valid @RequestBody HeartbeatBody body) {
         return ApiResponse.ok(service.heartbeat(pcId, new AgentService.AgentHeartbeatRequest(
                 body.agentStatus(), body.agentVersion(), body.cpuPercent(), body.memoryPercent())));
+    }
+
+    @GetMapping("/session")
+    public ApiResponse<SessionService.SessionDto> session(@AuthenticationPrincipal UUID pcId) {
+        return ApiResponse.ok(service.currentSession(pcId).orElse(null));
     }
 
     public record RegistrationBody(@NotBlank @Size(max = 255) String hostname,

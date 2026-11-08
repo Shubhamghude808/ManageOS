@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 
 import httpx
 
@@ -11,6 +12,7 @@ from agent.core.logging_config import configure_logging
 from agent.core.state import load_state, machine_id, save_state
 from agent.services.pc_info import collect_pc_info
 from agent.services.heartbeat import HeartbeatService
+from agent.services.session_status import write_status
 
 logger = logging.getLogger("cafeos.agent")
 
@@ -21,6 +23,7 @@ async def run(config: AgentConfig, stop_event: asyncio.Event | None = None) -> N
     current_machine_id = machine_id(state)
     pc_id = config.pc_id or state.get("pc_id")
     backoff_seconds = 1
+    write_status(None)
     while True:
         if stop_event.is_set():
             return
@@ -57,8 +60,16 @@ async def run(config: AgentConfig, stop_event: asyncio.Event | None = None) -> N
             try:
                 await heartbeat.register()
                 logger.info("Agent registered with CafeOS server")
+                last_session_poll = 0.0
                 while not stop_event.is_set():
                     await heartbeat.send()
+                    now = time.monotonic()
+                    if now - last_session_poll >= config.session_poll_interval_seconds:
+                        try:
+                            write_status(await client.get("/api/agent/session"))
+                        except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as error:
+                            logger.debug("Session status refresh failed: %s", type(error).__name__)
+                        last_session_poll = now
                     backoff_seconds = 1
                     try:
                         await asyncio.wait_for(stop_event.wait(), timeout=config.heartbeat_interval_seconds)

@@ -14,6 +14,9 @@ public interface GamingSessionRepository extends JpaRepository<GamingSession, UU
     List<GamingSession> findAllByStatus(SessionStatus status);
     boolean existsByPcId(UUID pcId);
 
+    @Query("select session from GamingSession session where session.pc.id = :pcId and session.status in (com.cafeos.session.SessionStatus.ACTIVE, com.cafeos.session.SessionStatus.PAUSED) order by session.startedAt desc")
+    Optional<GamingSession> findOpenByPcId(@Param("pcId") UUID pcId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select session from GamingSession session where session.id = :id")
     Optional<GamingSession> findByIdForUpdate(@Param("id") UUID id);

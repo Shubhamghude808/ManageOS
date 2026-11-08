@@ -103,6 +103,21 @@ It starts the agent in the background and provides a quit action. It does not
 control sessions or billing. A production deployment should normally run the
 Service for reliability and the tray only for user-visible status.
 
+### Session display
+
+The interactive session display runs in the logged-in Windows user session:
+
+```powershell
+python -m agent.ui
+```
+
+It reads the status snapshot written by the background agent and displays an
+idle screen when no session is active. For an active session it shows the
+plan, hourly rate, status, start time, expiry time, and a server-authoritative
+countdown. Active countdowns use the expiry timestamp between refreshes;
+paused sessions stop counting down. The display is presentation-only and has
+no controls for changing or ending a session.
+
 ### Standalone build
 
 CafeOSAgent.spec defines the PyInstaller foreground build:

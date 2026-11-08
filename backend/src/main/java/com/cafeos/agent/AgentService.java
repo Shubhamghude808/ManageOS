@@ -2,6 +2,7 @@ package com.cafeos.agent;
 
 import com.cafeos.pc.GamingPc;
 import com.cafeos.pc.GamingPcRepository;
+import com.cafeos.session.SessionService;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
@@ -16,9 +17,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class AgentService {
     private final GamingPcRepository pcs;
     private final PcHeartbeatRepository heartbeats;
+    private final SessionService sessions;
 
-    public AgentService(GamingPcRepository pcs, PcHeartbeatRepository heartbeats) {
-        this.pcs = pcs; this.heartbeats = heartbeats;
+    public AgentService(GamingPcRepository pcs, PcHeartbeatRepository heartbeats, SessionService sessions) {
+        this.pcs = pcs; this.heartbeats = heartbeats; this.sessions = sessions;
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.Optional<SessionService.SessionDto> currentSession(UUID pcId) {
+        return sessions.currentForPc(requirePcId(pcId));
     }
 
     @Transactional

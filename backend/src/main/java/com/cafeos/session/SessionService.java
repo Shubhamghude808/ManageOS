@@ -10,6 +10,7 @@ import com.cafeos.pricing.PricingPlanRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class SessionService {
         requireBranch(branchId);
         Instant now = Instant.now();
         return sessions.findAllByBranchIdOrderByStartedAtDesc(branchId).stream().map(s -> toDto(s, now)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<SessionDto> currentForPc(UUID pcId) {
+        return sessions.findOpenByPcId(pcId).map(session -> toDto(session, Instant.now()));
     }
 
     @Transactional

@@ -21,6 +21,7 @@ Planned endpoints: `POST /auth/login`, `/auth/refresh`, `/auth/logout`. Access J
 | POST | `/agent/enroll` | Public first-run enrollment; reuses a machine/hostname match or creates a PC automatically in the supplied branch, or the only branch |
 | POST | `/agent/register` | Bind authenticated agent hostname to its token-bound PC |
 | POST | `/agent/heartbeat` | Store authenticated CPU/memory heartbeat |
+| GET | `/agent/session` | Return the authenticated PC's current open session, or null |
 | GET | `/pricing-plans?branchId={uuid}` | List branch hourly rate plans |
 | POST | `/pricing-plans` | Create a branch hourly rate |
 | GET | `/sessions?branchId={uuid}` | List branch session history and live remaining time |
@@ -44,6 +45,8 @@ The backend checks for expired ACTIVE sessions every second and recovers overdue
 Agent enrollment is a public first-run operation for the pilot. Request body: `{machineId, hostname, os, ipAddress, agentVersion, branchId?}`. The server reuses an active PC matching the persistent machine ID or hostname; otherwise it creates a PC in the supplied branch, or in the only configured branch when `branchId` is omitted. If multiple branches exist without a branch ID, enrollment returns `409 CONFLICT`. The response is `201` with `{pcId, token}`; the server stores only the token's SHA-256 hash. The agent stores the token and machine ID in `%LOCALAPPDATA%\CafeOS\agent-state.json` and uses `Authorization: Bearer <token>` for authenticated calls. Registration body: `{hostname, os, ipAddress, agentVersion}`. Heartbeat body: `{agentStatus, agentVersion, cpuPercent, memoryPercent}` where CPU and memory are 0–100. The backend records server receipt time; AVAILABLE or OCCUPIED PCs with no heartbeat for 45 seconds are marked `OFFLINE`. The Python agent sends every 15 seconds with retry/backoff and re-enrolls after HTTP 401/403.
 
 PC list items also return `lastHeartbeatAt` and `agentTokenIssued`; the latter indicates whether a credential exists but never reveals it. Registration stores OS/IP as heartbeat diagnostic details and binds the reported hostname to the token-bound PC.
+
+The agent session display polls `GET /agent/session` and writes a local status snapshot for the logged-in PC-user UI. The response uses the same session fields as the staff session contract, including status, plan, rate, start time, expiry time, and remaining seconds. The server remains authoritative; the UI only interpolates the countdown between refreshes.
 
 WebSocket events include `PC_REGISTERED`, `PC_STATUS_UPDATED`, `SESSION_STARTED`, `SESSION_PAUSED`, `SESSION_RESUMED`, `SESSION_EXTENDED`, and `SESSION_COMPLETED`; WebSocket delivery and all session-related contracts remain planned. Clients will reconnect and reconcile from REST after reconnect.
 

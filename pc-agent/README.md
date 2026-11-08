@@ -2,6 +2,8 @@
 
 Python 3.12 agent for Windows 10/11. It registers the PC, sends CPU/memory heartbeats, retries network errors with bounded exponential backoff, and can run as a foreground process, Windows Service, or optional user-session tray process.
 
+The interactive PC-user session display runs separately with `python -m agent.ui`. It shows the current session status and server-authoritative countdown from the snapshot produced by the background agent. See `../docs/windows-agent.md` for setup and deployment details.
+
 Create a local `.env` from `.env.example`, set the server URL, and then run:
 
 ```powershell
