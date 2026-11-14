@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ManageOS | Design Preview</title>
+<style>
+:root{--bg:#080d16;--side:#0c1421;--panel:#111d2d;--panel2:#152338;--line:#20334c;--blue:#168cff;--cyan:#39b9ff;--white:#edf5ff;--muted:#8195ad;--green:#26d995;--orange:#ffb454}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font:14px "Segoe UI",Arial,sans-serif;display:flex;min-height:100vh}
+.sidebar{width:245px;background:var(--side);border-right:1px solid var(--line);padding:25px 16px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{font-size:21px;font-weight:800;letter-spacing:1px;margin:5px 10px 35px}.brand span{color:var(--blue)}.branch{background:var(--panel);padding:13px;border:1px solid var(--line);border-radius:10px;margin-bottom:28px;color:var(--muted)}.branch b{color:var(--white)}
+.section{font-size:10px;color:#60758f;letter-spacing:2px;margin:10px 12px}
+nav button{width:100%;text-align:left;background:transparent;border:0;color:#91a4bb;padding:13px 14px;border-radius:9px;margin:3px 0;cursor:pointer;font-size:14px}
+nav button:hover,nav button.active{background:#102c4b;color:#55b5ff}nav button.active{border-left:3px solid var(--blue)}
+.profile{margin-top:auto;border-top:1px solid var(--line);padding:20px 8px 0;color:var(--muted)}
+main{flex:1;min-width:0;padding:30px 36px;max-width:1600px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}.crumb{color:var(--muted)}.crumb b{color:white}.status{background:#102b29;color:var(--green);padding:9px 13px;border-radius:20px;font-size:12px}
+h1{font-size:27px;margin:0 0 8px;letter-spacing:-.5px}h2{font-size:17px;margin:0 0 18px}.sub{color:var(--muted);margin-bottom:27px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:24px 0}
+.card,.panel{background:linear-gradient(145deg,var(--panel),#0e1928);border:1px solid var(--line);border-radius:13px;padding:20px}
+.metric{font-size:12px;color:var(--muted)}.value{font-size:29px;font-weight:750;margin:13px 0 5px}.hint{font-size:11px;color:var(--green)}
+.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:17px;margin-top:18px}
+.bar{height:9px;background:#20344b;border-radius:10px;overflow:hidden;margin:12px 0}.bar span{display:block;height:100%;background:linear-gradient(90deg,#0876e9,#40c0ff);border-radius:10px}
+table{width:100%;border-collapse:collapse;text-align:left}th{font-size:11px;color:#8299b4;font-weight:600}td,th{padding:15px 10px;border-bottom:1px solid var(--line)}td{font-size:13px}tr:last-child td{border:0}
+.pill{padding:5px 9px;border-radius:20px;background:#10352e;color:var(--green);font-size:11px}.pill.blue{background:#102e4c;color:#58b9ff}.pill.orange{background:#3b2b1b;color:var(--orange)}
+.btn{background:var(--blue);border:0;color:white;padding:10px 15px;border-radius:8px;font-weight:650;cursor:pointer}.btn.secondary{background:#1b2c42;border:1px solid var(--line)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.pcgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.pc{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:17px}.pc strong{display:block;font-size:17px;margin-bottom:13px}
+.session{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:17px 0}.timer{font-size:22px;font-weight:750;color:#59baff;font-variant-numeric:tabular-nums}
+.placeholder{padding:45px 30px;text-align:center;color:var(--muted)}
+@media(max-width:950px){.sidebar{width:190px}.grid{grid-template-columns:repeat(2,1fr)}.pcgrid{grid-template-columns:repeat(2,1fr)}main{padding:22px}.layout{grid-template-columns:1fr}}
+@media(max-width:600px){body{display:block}.sidebar{width:100%;padding:12px}.brand{margin:5px 10px 15px}.branch,.section,.profile{display:none}nav{display:flex;overflow:auto}nav button{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr 1fr}main{padding:18px}.pcgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+<div class="brand">MANAGE<span>OS</span></div>
+<div class="branch">BRANCH<br><b>● Main Branch</b></div>
+<div class="section">WORKSPACE</div>
+<nav id="nav">
+<button class="active" data-page="Overview">◫ &nbsp; Overview</button>
+<button data-page="Gaming PCs">▣ &nbsp; Gaming PCs</button>
+<button data-page="Sessions">◷ &nbsp; Sessions</button>
+<button data-page="Customers">♙ &nbsp; Customers</button>
+<button data-page="Revenue">▤ &nbsp; Revenue</button>
+<button data-page="Reports">▥ &nbsp; Reports</button>
+<button data-page="Settings">⚙ &nbsp; Settings</button>
+</nav>
+<div class="profile">● &nbsp; Administrator<br><small>ManageOS Control Panel</small></div>
+</aside>
+<main>
+<div class="top"><div class="crumb">ManageOS / <b id="crumb">Overview</b></div><div class="status">● SYSTEM ONLINE</div></div>
+<div id="content"></div>
+</main>
+<script>
+const content=document.getElementById('content');
+const pages={
+"Overview":()=>`<h1>Overview</h1><div class="sub">Your gaming center at a glance.</div>
+<div class="grid">
+<div class="card"><div class="metric">REGISTERED PCs</div><div class="value">20</div><div class="hint">Gaming stations</div></div>
+<div class="card"><div class="metric">ACTIVE SESSIONS</div><div class="value">08</div><div class="hint">Currently running</div></div>
+<div class="card"><div class="metric">TODAY'S REVENUE</div><div class="value">—</div><div class="hint">Data not connected</div></div>
+<div class="card"><div class="metric">CUSTOMERS TODAY</div><div class="value">—</div><div class="hint">Data not connected</div></div></div>
+<div class="layout"><div class="panel"><h2>System overview</h2><p class="metric">Gaming PC availability</p><div class="bar"><span style="width:40%"></span></div><p class="metric">8 active · 12 available (illustrative preview)</p></div>
+<div class="panel"><h2>Connection status</h2><p><span class="pill">● Online</span></p><p class="metric">Backend connection status is shown in the actual application.</p></div></div>`,
+"Gaming PCs":()=>`<h1>Gaming PCs</h1><div class="sub">Manage your registered gaming stations.</div><div class="actions" style="margin-bottom:20px"><button class="btn">+ Add PC (preview)</button><button class="btn secondary">Refresh</button></div><div class="panel"><table><thead><tr><th>STATION</th><th>BRANCH</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>${[1,2,3,4,5,6].map((n)=>`<tr><td><b>PC-${String(n).padStart(2,'0')}</b></td><td>Main Branch</td><td><span class="pill ${n%3===0?'blue':''}">${n%3===0?'Available':'Online'}</span></td><td><button class="btn secondary">View</button></td></tr>`).join('')}</tbody></table></div><p class="metric">Illustrative visual data only. Actual PC records come from ManageOS.</p>`,
+"Sessions":()=>`<h1>Sessions</h1><div class="sub">Monitor active gaming sessions and pricing plans.</div><div class="panel"><h2>Active sessions</h2>${[1,2,3].map((n)=>`<div class="session"><div><b>PC-0${n}</b><p class="metric">Active gaming session</p></div><div class="timer">${n===1?'00:42:18':n===2?'01:15:06':'00:18:39'}</div><span class="pill">ACTIVE</span></div>`).join('')}<p class="metric">Illustrative timers. Actual session actions and remaining time are managed by the backend.</p></div><div class="panel" style="margin-top:18px"><h2>Pricing plans</h2><p class="metric">Existing ManageOS pricing-plan management appears here.</p><button class="btn secondary">Create plan (preview)</button></div>`,
+...Object.fromEntries(["Customers","Revenue","Reports","Settings"].map(p=>[p,()=>`<h1>${p}</h1><div class="sub">ManageOS · ${p}</div><div class="panel placeholder"><h2>${p} page</h2><p>This page is a placeholder in the current ManageOS application.</p><p>No new functionality has been added to this preview.</p></div>`]))
+};
+function show(page){document.getElementById('crumb').textContent=page;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));content.innerHTML=pages[page]()}
+document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(b)show(b.dataset.page)});
+show('Overview');
+</script>
+<!-- Claude edit verification -->
+</body>
+</html>

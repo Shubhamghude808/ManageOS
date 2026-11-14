@@ -1,0 +1,138 @@
+:root{
+  --bg:#080d16;
+  --side:#0c1421;
+  --panel:#111d2d;
+  --panel2:#152338;
+  --line:#20334c;
+  --blue:#168cff;
+  --cyan:#39b9ff;
+  --white:#edf5ff;
+  --muted:#8195ad;
+  --green:#26d995;
+  --orange:#ffb454;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font:14px "Segoe UI",Arial,sans-serif;
+  display:flex;
+  min-height:100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar{
+  width:245px;
+  background:var(--side);
+  border-right:1px solid var(--line);
+  padding:25px 16px;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.brand{
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin:5px 10px 35px;
+}
+.brand span{color:var(--blue)}
+
+.branch{
+  background:var(--panel);
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  margin-bottom:28px;
+  color:var(--muted);
+}
+.branch b{color:var(--white)}
+
+.section{
+  font-size:10px;
+  color:#60758f;
+  letter-spacing:2px;
+  margin:10px 12px;
+}
+
+nav button{
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:#91a4bb;
+  padding:13px 14px;
+  border-radius:9px;
+  margin:3px 0;
+  cursor:pointer;
+  font-size:14px;
+}
+nav button:hover,
+nav button.active{
+  background:#102c4b;
+  color:#55b5ff;
+}
+nav button.active{
+  border-left:3px solid var(--blue);
+}
+
+.profile{
+  margin-top:auto;
+  border-top:1px solid var(--line);
+  padding:20px 8px 0;
+  color:var(--muted);
+}
+
+/* ---------- Top Header ---------- */
+main{
+  flex:1;
+  min-width:0;
+  padding:30px 36px;
+  max-width:1600px;
+  margin:auto;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:32px;
+}
+
+.crumb{color:var(--muted)}
+.crumb b{color:white}
+
+.status{
+  background:#102b29;
+  color:var(--green);
+  padding:9px 13px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+/* ---------- Responsive ---------- */
+@media(max-width:950px){
+  .sidebar{width:190px}
+  main{padding:22px}
+}
+@media(max-width:600px){
+  body{display:block}
+  .sidebar{
+    width:100%;
+    padding:12px;
+  }
+  .brand{margin:5px 10px 15px}
+  .branch,
+  .section,
+  .profile{display:none}
+  nav{display:flex;overflow:auto}
+  nav button{
+    white-space:nowrap;
+    width:auto;
+  }
+  main{padding:18px}
+}
