@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// Use a relative path so Vite's proxy forwards /api → localhost:8080/api.
+// This works on localhost, LAN IP, and any tunnel URL (Dev Tunnels, ngrok, etc.)
+// without exposing the backend port to the outside world.
+const defaultApiBase = '/api'
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? defaultApiBase,
   timeout: 5000,
 })
 
@@ -16,6 +21,7 @@ export type GamingSession = {
   status: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'; hourlyRate: number; currency: string
   allocatedSeconds: number; remainingSeconds: number; startedAt: string; pausedAt: string | null
   accumulatedPausedSeconds: number; expiresAt: string | null; endedAt: string | null; amountDue: number | null
+  customerId?: string | null; customerName?: string | null; customerPhone?: string | null
 }
 
 let configuredCredentials = false
@@ -72,7 +78,13 @@ export async function getSessions(branchId: string): Promise<GamingSession[]> {
   const response = await api.get<ApiEnvelope<GamingSession[]>>('/sessions', { params: { branchId } })
   return response.data.data
 }
-export async function startSession(input: { pcId: string; pricingPlanId: string; allocatedSeconds: number }): Promise<GamingSession> {
+export async function startSession(input: {
+  pcId: string
+  pricingPlanId: string
+  allocatedSeconds: number
+  customerName?: string
+  customerPhone?: string
+}): Promise<GamingSession> {
   const response = await api.post<ApiEnvelope<GamingSession>>('/sessions', input)
   return response.data.data
 }

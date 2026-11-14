@@ -103,20 +103,30 @@ It starts the agent in the background and provides a quit action. It does not
 control sessions or billing. A production deployment should normally run the
 Service for reliability and the tray only for user-visible status.
 
-### Session display
+### Session display & Gaming Kiosk
 
-The interactive session display runs in the logged-in Windows user session:
+The interactive session client runs in the logged-in Windows user session:
 
 ```powershell
 python -m agent.ui
 ```
 
-It reads the status snapshot written by the background agent and displays an
-idle screen when no session is active. For an active session it shows the
-plan, hourly rate, status, start time, expiry time, and a server-authoritative
-countdown. Active countdowns use the expiry timestamp between refreshes;
-paused sessions stop counting down. The display is presentation-only and has
-no controls for changing or ending a session.
+It operates across three dynamic states:
+
+1. **Idle Kiosk Lock Screen**:
+   When no paid session is active on the PC, the client locks the screen in fullscreen topmost mode and installs low-level Windows keyboard hooks (`WH_KEYBOARD_LL` via `ctypes`) to suppress system keys (`WinKey`, `Alt+Tab`, `Alt+Esc`, `Ctrl+Esc`, `Alt+F4`). It displays cafe branding, station specs, hourly rates, and prompts the user to start a session at the counter.
+   - *Staff Emergency Override*: Staff can press `Ctrl+Shift+F12` and enter the configured admin PIN (`7777` by default) to unlock or minimize the kiosk during maintenance.
+2. **In-Game Gamer HUD Overlay**:
+   As soon as a session is started by the cashier, the kiosk automatically unlocks the desktop and unhooks all system keys. The client switches to a sleek, semi-transparent floating Gamer HUD overlay displaying:
+   - Gamer Tag / Customer Name (e.g., `👤 Alex`)
+   - Plan Name & Hourly Rate (e.g., `Standard Gaming · ₹100.00 / hr`)
+   - Server-authoritative countdown clock (`HH:MM:SS`)
+   - *Pill Minimization*: Clicking `—` collapses the HUD into a compact 280x48px timer pill in the corner so it never interferes with game viewports.
+   - *Audible / Visual Alerts*: Warning chimes and color shifts at 10m, 5m, and 1m remaining.
+3. **Step-Away Temporary Lock**:
+   Gamers can click `🔒 Step Away` on the HUD to set a 4-digit PIN. The client locks the screen fullscreen and re-engages keyboard protection while continuing the paid session, allowing the gamer to take a break without losing their station or games. Entering their PIN immediately restores the session and desktop.
+4. **Session Expiry**:
+   When the session expires or is ended, the HUD closes, and the Fullscreen Hardened Kiosk Lock Screen re-engages immediately.
 
 ### Standalone build
 

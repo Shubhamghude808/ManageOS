@@ -1,0 +1,14 @@
+{
+  "0": "Branch",
+  "3": "PcService",
+  "7": "run",
+  "18": "GamingCafeClientApp",
+  "19": "uuid",
+  "21": "demo_client.py",
+  "26": "GamingPc",
+  "34": "GamingSession",
+  "35": "GamingPcRepository",
+  "36": "Customer",
+  "37": "PricingPlan",
+  "43": "jakarta.persistence.PrePersist"
+}

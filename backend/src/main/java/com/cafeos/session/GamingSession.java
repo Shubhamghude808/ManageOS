@@ -1,6 +1,7 @@
 package com.cafeos.session;
 
 import com.cafeos.branch.Branch;
+import com.cafeos.customer.Customer;
 import com.cafeos.pc.GamingPc;
 import com.cafeos.pricing.PricingPlan;
 import java.math.BigDecimal;
@@ -29,6 +30,9 @@ public class GamingSession {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pc_id", nullable = false)
     private GamingPc pc;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pricing_plan_id", nullable = false)
     private PricingPlan pricingPlan;
@@ -58,10 +62,16 @@ public class GamingSession {
         this.status = SessionStatus.ACTIVE; this.hourlyRate = pricingPlan.getHourlyRate();
         this.startedAt = startedAt; this.allocatedSeconds = allocatedSeconds;
     }
+    public GamingSession(Branch branch, GamingPc pc, Customer customer, PricingPlan pricingPlan, Instant startedAt, long allocatedSeconds) {
+        this(branch, pc, pricingPlan, startedAt, allocatedSeconds);
+        this.customer = customer;
+    }
     @PrePersist void onCreate() { if (createdAt == null) createdAt = Instant.now(); }
     public UUID getId() { return id; }
     public Branch getBranch() { return branch; }
     public GamingPc getPc() { return pc; }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
     public PricingPlan getPricingPlan() { return pricingPlan; }
     public SessionStatus getStatus() { return status; }
     public BigDecimal getHourlyRate() { return hourlyRate; }

@@ -17,3 +17,5 @@ class AgentConfig(BaseSettings):
     agent_version: str = "0.2.0"
     log_file: str | None = None
     allow_plaintext_token_fallback: bool = False
+    kiosk_hardened: bool = True
+    admin_pin: str = "7777"

@@ -5,7 +5,12 @@ from pathlib import Path
 from unittest.mock import patch
 
 from agent.core.state import load_state, machine_id, save_state
-from agent.services.payloads import HeartbeatPayload, RegistrationPayload
+
+try:
+    from agent.services.payloads import HeartbeatPayload, RegistrationPayload
+    HAS_PYDANTIC = True
+except ImportError:
+    HAS_PYDANTIC = False
 
 
 class AgentStateTests(unittest.TestCase):
@@ -23,6 +28,7 @@ class AgentStateTests(unittest.TestCase):
                 self.assertEqual(first, json.loads(path.read_text())["machine_id"])
 
 
+@unittest.skipUnless(HAS_PYDANTIC, "pydantic is not installed")
 class PayloadTests(unittest.TestCase):
     def test_payloads_use_api_camel_case(self):
         registration = RegistrationPayload(hostname="pc-01", os="Windows 11", ip_address="192.168.1.20")

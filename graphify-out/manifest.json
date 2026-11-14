@@ -150,10 +150,10 @@
     "semantic_hash": "9b424e73950a63163ada69ec6b242684"
   },
   "backend/src/main/java/com/cafeos/config/SecurityConfig.java": {
-    "mtime": 1793727889.886554,
-    "seen": 1794684340.8311496,
-    "ast_hash": "edb16cb5125b7c96f297c7c83c411bfe",
-    "semantic_hash": "edb16cb5125b7c96f297c7c83c411bfe"
+    "mtime": 1794689989.6416214,
+    "seen": 1794690078.3209622,
+    "ast_hash": "ebe54b1dcbae0ba9f293f871251b1904",
+    "semantic_hash": ""
   },
   "backend/src/main/java/com/cafeos/pc/GamingPc.java": {
     "mtime": 1794141689.1634605,
@@ -210,10 +210,10 @@
     "semantic_hash": "73105ef1c550107e43793ca3d52280bf"
   },
   "backend/src/main/java/com/cafeos/session/GamingSession.java": {
-    "mtime": 1793637934.0419128,
-    "seen": 1794684340.8311496,
-    "ast_hash": "cb960556bf559c146dba5b0e48618daf",
-    "semantic_hash": "cb960556bf559c146dba5b0e48618daf"
+    "mtime": 1794686121.4069197,
+    "seen": 1794686507.250874,
+    "ast_hash": "413b93135840c8f037b411533a606728",
+    "semantic_hash": ""
   },
   "backend/src/main/java/com/cafeos/session/GamingSessionRepository.java": {
     "mtime": 1794144813.3671064,
@@ -228,10 +228,10 @@
     "semantic_hash": "ffa256d317e1d3bcedc1543abe9a9d67"
   },
   "backend/src/main/java/com/cafeos/session/SessionController.java": {
-    "mtime": 1793637935.9733071,
-    "seen": 1794684340.8311496,
-    "ast_hash": "bd3a421a9836ef2d91e2a9c1b9debaee",
-    "semantic_hash": "bd3a421a9836ef2d91e2a9c1b9debaee"
+    "mtime": 1794686602.935431,
+    "seen": 1794686752.6939933,
+    "ast_hash": "2816dace84a8af62ded594a7dc749fe8",
+    "semantic_hash": ""
   },
   "backend/src/main/java/com/cafeos/session/SessionExpiryService.java": {
     "mtime": 1793637940.0074708,
@@ -240,10 +240,10 @@
     "semantic_hash": "1482d57f187d5e1538e142bbc7e5e8b6"
   },
   "backend/src/main/java/com/cafeos/session/SessionService.java": {
-    "mtime": 1794144815.1623094,
-    "seen": 1794684340.8311496,
-    "ast_hash": "1a4f06eac03f6bc5460981078bbfe932",
-    "semantic_hash": "1a4f06eac03f6bc5460981078bbfe932"
+    "mtime": 1794686602.9845636,
+    "seen": 1794686752.6939933,
+    "ast_hash": "09fc68f18225c278ad0f2f3f4b3e2504",
+    "semantic_hash": ""
   },
   "backend/src/main/java/com/cafeos/session/SessionStatus.java": {
     "mtime": 1793637884.999444,
@@ -260,62 +260,62 @@
   "backend/src/main/resources/db/migration/V10__index_stale_occupied_pcs.sql": {
     "mtime": 1794142088.9509528,
     "seen": 1794684340.8311496,
-    "ast_hash": "66e9c4b90917d995170e96d7590fffc8",
-    "semantic_hash": "66e9c4b90917d995170e96d7590fffc8"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V1__initial_schema.sql": {
     "mtime": 1793633837.4603188,
     "seen": 1794684340.8311496,
-    "ast_hash": "7d47b86feb1a0348be6a4c1175dd27e4",
-    "semantic_hash": "7d47b86feb1a0348be6a4c1175dd27e4"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V2__case_insensitive_branch_pc_names.sql": {
     "mtime": 1793636175.4599397,
     "seen": 1794684340.8311496,
-    "ast_hash": "c7897ffea4e1d8420c6116c18d1b8096",
-    "semantic_hash": "c7897ffea4e1d8420c6116c18d1b8096"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V3__case_insensitive_branch_names.sql": {
     "mtime": 1793636176.6627202,
     "seen": 1794684340.8311496,
-    "ast_hash": "bd30fa660bdcd2af6a95fa7d7d0d4079",
-    "semantic_hash": "bd30fa660bdcd2af6a95fa7d7d0d4079"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V4__agent_heartbeat_support.sql": {
     "mtime": 1793637362.7252457,
     "seen": 1794684340.8311496,
-    "ast_hash": "536bdf9ee12400170047afa58d034e89",
-    "semantic_hash": "536bdf9ee12400170047afa58d034e89"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V5__pricing_plan_duration.sql": {
     "mtime": 1793641732.9258246,
     "seen": 1794684340.8311496,
-    "ast_hash": "dc8b426a7ca67edd9df3d1992848af86",
-    "semantic_hash": "dc8b426a7ca67edd9df3d1992848af86"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V6__agent_machine_identity.sql": {
     "mtime": 1793727888.209196,
     "seen": 1794684340.8311496,
-    "ast_hash": "622164263aa632be05b6d4426fa2ff13",
-    "semantic_hash": "622164263aa632be05b6d4426fa2ff13"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V7__soft_delete_gaming_pcs.sql": {
     "mtime": 1793728513.9588494,
     "seen": 1794684340.8311496,
-    "ast_hash": "85b8657b95099b053bfe6925d45a33a3",
-    "semantic_hash": "85b8657b95099b053bfe6925d45a33a3"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V8__release_archived_agent_machine_ids.sql": {
     "mtime": 1793730585.930933,
     "seen": 1794684340.8311496,
-    "ast_hash": "246b58520bb26f439b9dfb8ba1b0614e",
-    "semantic_hash": "246b58520bb26f439b9dfb8ba1b0614e"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/main/resources/db/migration/V9__allow_active_pc_name_reuse.sql": {
     "mtime": 1793730805.7738492,
     "seen": 1794684340.8311496,
-    "ast_hash": "32a8fda95c7c74e2de19d03a48d6fdfe",
-    "semantic_hash": "32a8fda95c7c74e2de19d03a48d6fdfe"
+    "ast_hash": "",
+    "semantic_hash": ""
   },
   "backend/src/test/java/com/cafeos/CafeOsApplicationTests.java": {
     "mtime": 1793636073.1634529,
@@ -354,10 +354,10 @@
     "semantic_hash": "e0336da95b993361aff58ea2b80f8f65"
   },
   "frontend/src/features/SessionManagement.tsx": {
-    "mtime": 1793642036.304088,
-    "seen": 1794684340.8311496,
-    "ast_hash": "1da4d47d9bbde14ab2c4ff05c041a32e",
-    "semantic_hash": "1da4d47d9bbde14ab2c4ff05c041a32e"
+    "mtime": 1794686603.4221582,
+    "seen": 1794686752.6950479,
+    "ast_hash": "850e68aec873c8d7118acbac048f87c8",
+    "semantic_hash": ""
   },
   "frontend/src/main.tsx": {
     "mtime": 1793633939.6479435,
@@ -366,10 +366,10 @@
     "semantic_hash": "44b7dd27082b742b42e4c250633b26e6"
   },
   "frontend/src/services/api.ts": {
-    "mtime": 1793728309.2288313,
-    "seen": 1794684340.8311496,
-    "ast_hash": "c1f02f495b09ad7c09a490e57dc70224",
-    "semantic_hash": "c1f02f495b09ad7c09a490e57dc70224"
+    "mtime": 1794690006.955592,
+    "seen": 1794690078.3382728,
+    "ast_hash": "3224b89aa7a8fdef5f3026bf787005b4",
+    "semantic_hash": ""
   },
   "frontend/src/vite-env.d.ts": {
     "mtime": 1793635868.0052748,
@@ -396,10 +396,10 @@
     "semantic_hash": "a8fa90a142f090477a3e873fc3d442f7"
   },
   "frontend/vite.config.ts": {
-    "mtime": 1793633933.2405996,
-    "seen": 1794684340.8311496,
-    "ast_hash": "03ee950a734de5d450e44c533539ea45",
-    "semantic_hash": "03ee950a734de5d450e44c533539ea45"
+    "mtime": 1794689998.0844214,
+    "seen": 1794690078.3413048,
+    "ast_hash": "2f7be57682823d6ff2564ffc1a826afb",
+    "semantic_hash": ""
   },
   "pc-agent/agent/__init__.py": {
     "mtime": 1793633967.4630964,
@@ -438,10 +438,10 @@
     "semantic_hash": "080c4671c1e450c6a392e870d1ddf0f8"
   },
   "pc-agent/agent/core/config.py": {
-    "mtime": 1794144872.3139195,
-    "seen": 1794684340.8311496,
-    "ast_hash": "75b0b95cdf010b64c2c57902d04b4c93",
-    "semantic_hash": "75b0b95cdf010b64c2c57902d04b4c93"
+    "mtime": 1794686294.837579,
+    "seen": 1794686507.2638805,
+    "ast_hash": "d77be031d0fa38a6e7663dc27cb627ba",
+    "semantic_hash": ""
   },
   "pc-agent/agent/core/credentials.py": {
     "mtime": 1794143986.5498562,
@@ -510,16 +510,16 @@
     "semantic_hash": "322dc988f43b40b211758499cb5f8bb8"
   },
   "pc-agent/agent/ui.py": {
-    "mtime": 1794144875.2350585,
-    "seen": 1794684340.8311496,
-    "ast_hash": "f67c14f4a168f8b8f8058d417d60025b",
-    "semantic_hash": "f67c14f4a168f8b8f8058d417d60025b"
+    "mtime": 1794686603.7045193,
+    "seen": 1794686752.708797,
+    "ast_hash": "9c44d5555d54b3dc4c6fc9f71f4fe694",
+    "semantic_hash": ""
   },
   "pc-agent/tests/test_agent.py": {
-    "mtime": 1794143614.5417986,
-    "seen": 1794684340.8311496,
-    "ast_hash": "134279c333435cca2687c2b89d476276",
-    "semantic_hash": "134279c333435cca2687c2b89d476276"
+    "mtime": 1794686603.7590573,
+    "seen": 1794686752.708797,
+    "ast_hash": "787dfd54ca77484efc5448f28e624575",
+    "semantic_hash": ""
   },
   "README.md": {
     "mtime": 1794146157.3689258,
@@ -558,10 +558,10 @@
     "semantic_hash": "4641e5431028e56368ed48ec5ac09c60"
   },
   "docs/windows-agent.md": {
-    "mtime": 1794144955.4575899,
-    "seen": 1794684340.8311496,
-    "ast_hash": "c5573ee0d51b83b45da7f67427a6767d",
-    "semantic_hash": "c5573ee0d51b83b45da7f67427a6767d"
+    "mtime": 1794686603.1035988,
+    "seen": 1794686752.708797,
+    "ast_hash": "3e68b448ca81bc3f4f0368e408994da8",
+    "semantic_hash": ""
   },
   "frontend/index.html": {
     "mtime": 1793633932.1494668,
@@ -570,10 +570,10 @@
     "semantic_hash": "3526bf93110eba44d3947d28486b22a5"
   },
   "pc-agent/README.md": {
-    "mtime": 1794145037.1591074,
-    "seen": 1794684340.8311496,
-    "ast_hash": "70e7fbdf97169498b8aa73725a958dc3",
-    "semantic_hash": "70e7fbdf97169498b8aa73725a958dc3"
+    "mtime": 1794686845.65583,
+    "seen": 1794690078.3603518,
+    "ast_hash": "32d04aa181f4fec11fa2292ae17268af",
+    "semantic_hash": ""
   },
   "pc-agent/requirements-windows.txt": {
     "mtime": 1794143672.2066545,
@@ -586,5 +586,41 @@
     "seen": 1794684340.8311496,
     "ast_hash": "d43d0d3f15e423718785f3929d6e8438",
     "semantic_hash": "d43d0d3f15e423718785f3929d6e8438"
+  },
+  "backend/src/main/java/com/cafeos/customer/Customer.java": {
+    "mtime": 1794686099.1801224,
+    "seen": 1794686507.2462797,
+    "ast_hash": "86836d7e3811df293880147c1f8267d3",
+    "semantic_hash": ""
+  },
+  "backend/src/main/java/com/cafeos/customer/CustomerRepository.java": {
+    "mtime": 1794686103.1204417,
+    "seen": 1794686507.2462797,
+    "ast_hash": "16ec2d369684ce4b46219b88ee52ee85",
+    "semantic_hash": ""
+  },
+  "pc-agent/agent/kiosk_windows.py": {
+    "mtime": 1794686312.0995338,
+    "seen": 1794686507.2648785,
+    "ast_hash": "632f4dff8039db59d660655cf8817ed3",
+    "semantic_hash": ""
+  },
+  "pc-agent/tests/test_kiosk_and_ui.py": {
+    "mtime": 1794686449.0815742,
+    "seen": 1794686507.2698815,
+    "ast_hash": "e8152dd8cdff9a323e7a9364c10b81e6",
+    "semantic_hash": ""
+  },
+  "pc-agent/demo_client.py": {
+    "mtime": 1794686730.0601506,
+    "seen": 1794686752.708797,
+    "ast_hash": "7f4685b1cab7a3f3d37ddcc8d4ce3db7",
+    "semantic_hash": ""
+  },
+  "frontend/package-lock.json": {
+    "mtime": 1793635171.469915,
+    "seen": 1794686507.2748795,
+    "ast_hash": "5e2b2b44c794c6b2a9c4b430813b928d",
+    "semantic_hash": ""
   }
 }

@@ -12,22 +12,23 @@ flowchart LR
   API --> DB[(Local PostgreSQL)]
   Agent[Windows Agent process] -->|Bearer token / HTTP heartbeat| API
   Agent <-->|Authenticated WebSocket, planned| API
-  Tray[User session tray app] <-->|Local IPC, future| Agent
+  Kiosk[Kiosk & Gamer HUD] <-->|Local session file| Agent
   API -. outbox sync when available .-> Cloud[Optional CafeOS cloud]
 ```
 
 ## Components
 
-- **Frontend** (`frontend`): staff UI, navigation and presentation. It does not decide authoritative elapsed time or price. TanStack Query owns server state; API calls go through the service layer.
+- **Frontend** (`frontend`): staff UI, navigation and presentation. It does not decide authoritative elapsed time or price. TanStack Query owns server state; API calls go to `/api` (relative path) and the Vite dev server proxies to `localhost:8080`, making the UI work identically on localhost, LAN IPs, and VS Code Dev Tunnel URLs.
 - **Overview activity:** the dashboard reads the same branch session history endpoint used by the session page, refreshes it every five seconds, and presents recent session states. It does not maintain a second activity store.
-- **Backend** (`backend`): REST boundary, temporary Basic/device bearer authorization, business services and persistence. Controllers validate DTOs and delegate. Session state changes use transactions and row locks; expiry is recalculated from stored UTC timestamps after restart.
+- **Backend** (`backend`): REST boundary, temporary Basic/device bearer authorization, business services and persistence. Controllers validate DTOs and delegate. Session state changes use transactions and row locks; expiry is recalculated from stored UTC timestamps after restart. `server.address: 0.0.0.0` binds the server to all interfaces; CORS allows origin patterns for `localhost`, `127.0.0.1`, `192.168.*.*`, `10.*.*.*`, and `172.*.*.*`.
 - **PostgreSQL**: authoritative local store. Flyway owns schema changes; Hibernate validates but never creates or updates tables. UUID identifiers, UTC instants and decimal currency values are used.
-- **Windows Agent** (`pc-agent`): the current Python process registers a PC and sends authenticated CPU/memory heartbeats over the cafe LAN. Windows Service hosting, tray UI, and WebSocket transport are still planned. Agent countdowns remain presentation only; agents do not lock or restrict Windows.
+- **Windows Agent / Kiosk Client** (`pc-agent`): the Python process (`python -m agent.ui`) registers a PC, sends authenticated CPU/memory heartbeats over the cafe LAN, and implements a Hardened Kiosk with three states: (1) **Hardened Lock Screen** — low-level `WH_KEYBOARD_LL` Windows hooks block Win key, Alt+Tab, Alt+Esc, Ctrl+Esc, and Alt+F4; (2) **Gamer HUD** — fullscreen overlay with pill mode and audible alerts at 10 m/5 m/1 m remaining; (3) **Step-Away PIN lock** — triggered when the gamer steps away mid-session. Staff bypass via `Ctrl+Shift+F12` + admin PIN. Session state is exchanged via a local session file.
+- **Customer profiles**: `Customer` JPA entity and `CustomerRepository` are live. Customers are auto-provisioned on session start when `customerName`/`customerPhone` are provided; `gaming_sessions.customer_id` is an active foreign key.
 - **Cloud sync**: future optional outbox consumer. Local writes create durable sync events; no multi-master writes in the MVP.
 
 ## Backend module boundaries
 
-`auth` is still a development Basic placeholder; `cafe` and `branch` own tenant and location metadata; `pc` owns inventory and status; `agent` owns device tokens and heartbeat receipt; `pricing` owns hourly rates; `session` owns the authoritative start/pause/resume/extend/end state machine and amount due; `customer`, `payment`, `reports`, `sync`, and `websocket` are planned modules. `common` provides API errors and shared primitives; `config` wires infrastructure. Modules should expose application services rather than depend on each other's persistence internals.
+`auth` is still a development Basic placeholder; `cafe` and `branch` own tenant and location metadata; `pc` owns inventory and status; `agent` owns device tokens and heartbeat receipt; `pricing` owns hourly rates; `session` owns the authoritative start/pause/resume/extend/end state machine and amount due; `customer` is implemented (Customer entity, CustomerRepository, auto-provisioning on session start, live `customer_id` FK on sessions); `payment`, `reports`, `sync`, and `websocket` are planned modules. `common` provides API errors and shared primitives; `config` wires infrastructure. Modules should expose application services rather than depend on each other's persistence internals.
 
 ## Reliability and security
 

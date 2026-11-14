@@ -2,6 +2,8 @@ package com.cafeos.session;
 
 import com.cafeos.branch.Branch;
 import com.cafeos.branch.BranchRepository;
+import com.cafeos.customer.Customer;
+import com.cafeos.customer.CustomerRepository;
 import com.cafeos.pc.GamingPc;
 import com.cafeos.pc.GamingPcRepository;
 import com.cafeos.pc.PcStatus;
@@ -23,10 +25,13 @@ public class SessionService {
     private final GamingPcRepository pcs;
     private final PricingPlanRepository plans;
     private final BranchRepository branches;
+    private final CustomerRepository customers;
 
     public SessionService(GamingSessionRepository sessions, GamingPcRepository pcs,
-                          PricingPlanRepository plans, BranchRepository branches) {
+                          PricingPlanRepository plans, BranchRepository branches,
+                          CustomerRepository customers) {
         this.sessions = sessions; this.pcs = pcs; this.plans = plans; this.branches = branches;
+        this.customers = customers;
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +55,13 @@ public class SessionService {
         }
         PricingPlan plan = plans.findByIdAndBranchIdAndActiveTrue(request.pricingPlanId(), pc.getBranch().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Active pricing plan not found for this branch"));
-        GamingSession session = sessions.save(new GamingSession(pc.getBranch(), pc, plan, Instant.now(), request.allocatedSeconds()));
+        Customer customer = null;
+        if (request.customerName() != null && !request.customerName().isBlank()) {
+            String trimmedName = request.customerName().trim();
+            customer = customers.findByBranchIdAndName(pc.getBranch().getId(), trimmedName)
+                    .orElseGet(() -> customers.save(new Customer(pc.getBranch(), trimmedName, request.customerPhone())));
+        }
+        GamingSession session = sessions.save(new GamingSession(pc.getBranch(), pc, customer, plan, Instant.now(), request.allocatedSeconds()));
         pc.markOccupied();
         return toDto(session, Instant.now());
     }
@@ -129,11 +140,15 @@ public class SessionService {
             remaining = Math.max(0, session.getAllocatedSeconds() - SessionBillingCalculator.billableSeconds(session, now));
         }
         Instant expiresAt = session.getStatus() == SessionStatus.PAUSED ? null : session.expiryAt();
+        UUID customerId = session.getCustomer() != null ? session.getCustomer().getId() : null;
+        String customerName = session.getCustomer() != null ? session.getCustomer().getName() : null;
+        String customerPhone = session.getCustomer() != null ? session.getCustomer().getPhone() : null;
         return new SessionDto(session.getId(), session.getBranch().getId(), session.getPc().getId(),
                 session.getPc().getName(), session.getPricingPlan().getId(), session.getPricingPlan().getName(),
                 session.getStatus().name(), session.getHourlyRate(), session.getPricingPlan().getCurrency(),
                 session.getAllocatedSeconds(), remaining, session.getStartedAt(), session.getPausedAt(),
-                session.getAccumulatedPausedSeconds(), expiresAt, session.getEndedAt(), session.getAmountDue());
+                session.getAccumulatedPausedSeconds(), expiresAt, session.getEndedAt(), session.getAmountDue(),
+                customerId, customerName, customerPhone);
     }
 
     private Branch requireBranch(UUID id) {
@@ -147,9 +162,14 @@ public class SessionService {
         throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid transition from " + session.getStatus());
     }
 
-    public record StartSessionRequest(UUID pcId, UUID pricingPlanId, long allocatedSeconds) {}
+    public record StartSessionRequest(UUID pcId, UUID pricingPlanId, long allocatedSeconds, String customerName, String customerPhone) {
+        public StartSessionRequest(UUID pcId, UUID pricingPlanId, long allocatedSeconds) {
+            this(pcId, pricingPlanId, allocatedSeconds, null, null);
+        }
+    }
     public record SessionDto(UUID id, UUID branchId, UUID pcId, String pcName, UUID pricingPlanId, String pricingPlanName,
                              String status, BigDecimal hourlyRate, String currency, long allocatedSeconds,
                              long remainingSeconds, Instant startedAt, Instant pausedAt, long accumulatedPausedSeconds,
-                             Instant expiresAt, Instant endedAt, BigDecimal amountDue) {}
+                             Instant expiresAt, Instant endedAt, BigDecimal amountDue,
+                             UUID customerId, String customerName, String customerPhone) {}
 }

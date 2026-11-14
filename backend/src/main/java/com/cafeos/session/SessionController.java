@@ -32,7 +32,7 @@ public class SessionController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<SessionService.SessionDto> start(@Valid @RequestBody StartSessionBody body) {
         return ApiResponse.ok(service.start(new SessionService.StartSessionRequest(
-                body.pcId(), body.pricingPlanId(), body.allocatedSeconds())));
+                body.pcId(), body.pricingPlanId(), body.allocatedSeconds(), body.customerName(), body.customerPhone())));
     }
 
     @PostMapping("/{id}/pause")
@@ -47,6 +47,7 @@ public class SessionController {
     public ApiResponse<SessionService.SessionDto> end(@PathVariable UUID id) { return ApiResponse.ok(service.end(id)); }
 
     public record StartSessionBody(@NotNull UUID pcId, @NotNull UUID pricingPlanId,
-                                   @Min(60) @Max(86_400) long allocatedSeconds) {}
+                                   @Min(60) @Max(86_400) long allocatedSeconds,
+                                   String customerName, String customerPhone) {}
     public record ExtendSessionBody(@Min(60) @Max(86_400) long addedSeconds) {}
 }

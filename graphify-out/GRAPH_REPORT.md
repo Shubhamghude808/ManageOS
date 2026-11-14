@@ -1,22 +1,29 @@
 # Graph Report - caf  (2026-11-15)
 
 ## Corpus Check
-- Corpus is ~14,617 words - fits in a single context window. You may not need a graph.
+- 100 files · ~17,383 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 8 file(s) not represented in the graph (top: .css 3, .example 2, (none) 2)
 
 ## Summary
-- 762 nodes · 1748 edges · 34 communities (23 shown, 11 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 111 edges (avg confidence: 0.87)
+- 823 nodes · 1894 edges · 39 communities (24 shown, 15 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 115 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
+## Graph Freshness
+- Built from commit: `ab3c09ae`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
 ## Community Hubs (Navigation)
-- Java Unit Tests and Assertions
+- Branch
 - Backend Agent Services and Credentials
 - Gaming Session Management
-- Agent Liveness and Health Tracking
+- PcService
 - Agent Enrollment and Security Configuration
 - System Documentation and Architecture Specs
 - Spring Database and App Configuration
-- PC Agent Enrollment Client
+- run
 - Frontend Session Management View
 - PC Agent HTTP API Client
 - PC Agent Machine State and Identity
@@ -27,28 +34,31 @@
 - Frontend UI Libraries and Router
 - Pricing Plan Domain and Endpoints
 - Docker Compose and Postgres Service
-- Backend Agent Heartbeat Endpoints
-- Global API Error Handling
+- GamingCafeClientApp
 - Frontend TypeScript Node Config
-- PC Agent Windows Session UI
+- demo_client.py
 - Spring Boot Health and Context Tests
 - PC Agent Windows DPAPI Credentials
 - Spring Boot Application Bootstrap
 - Frontend Build and Dev Scripts
-- PC Agent Host Info Collection
+- GamingPc
 - Frontend TypeScript Root Config
 - Backend Maven Artifact Descriptor
+- GamingSession
+- GamingPcRepository
+- Customer
+- PricingPlan
 
 ## God Nodes (most connected - your core abstractions)
 1. `GamingPc` - 50 edges
-2. `GamingSession` - 37 edges
-3. `Branch` - 35 edges
+2. `GamingSession` - 40 edges
+3. `Branch` - 39 edges
 4. `ApiResponse` - 33 edges
-5. `SessionService` - 31 edges
+5. `SessionService` - 32 edges
 6. `GamingPcRepository` - 29 edges
 7. `run()` - 28 edges
 8. `PricingPlan` - 24 edges
-9. `AgentTokenService` - 22 edges
+9. `Customer` - 23 edges
 10. `BranchRepository` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -60,33 +70,29 @@
   pc-agent/requirements-windows.txt → docs/windows-agent.md
 - `SessionManagement()` --indirect_call--> `getBranches()`  [INFERRED]
   frontend/src/features/SessionManagement.tsx → frontend/src/services/api.ts
-- `CafeOS Overview` --references--> `CafeOS Architecture Overview`  [EXTRACTED]
-  README.md → docs/architecture.md
+- `HttpApiClient` --uses--> `AgentConfig`  [INFERRED]
+  pc-agent/agent/communication/http_client.py → pc-agent/agent/core/config.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (34 total, 11 thin omitted)
-
-### Community 0 - "Java Unit Tests and Assertions"
-Cohesion: 0.05
-Nodes (6): PcHeartbeat, Branch, Cafe, GamingPc, PricingPlan, SessionBillingCalculatorTest
+## Communities (39 total, 15 thin omitted)
 
 ### Community 1 - "Backend Agent Services and Credentials"
 Cohesion: 0.07
-Nodes (10): AgentCredentialController, PcHeartbeatRepository, BranchController, BranchDto, BranchRepository, BranchService, CafeRepository, CreateBranchRequest (+2 more)
+Nodes (14): AgentCredentialController, AgentEnrollmentController, EnrollmentRequest, EnrollmentResponse, BranchController, BranchDto, BranchService, CafeRepository (+6 more)
 
 ### Community 2 - "Gaming Session Management"
-Cohesion: 0.06
-Nodes (15): GamingSession, GamingSessionRepository, SessionBillingCalculator, ExtendSessionBody, SessionController, StartSessionBody, SessionExpiryService, SessionDto (+7 more)
-
-### Community 3 - "Agent Liveness and Health Tracking"
 Cohesion: 0.07
-Nodes (16): AgentLivenessService, IssuedAgentToken, GamingPcRepository, CreatePcBody, PcController, UpdatePcBody, CreatePcRequest, PcDto (+8 more)
+Nodes (18): AgentController, HeartbeatBody, RegistrationBody, AgentAcknowledgement, AgentHeartbeatRequest, AgentRegistrationRequest, AgentService, CustomerRepository (+10 more)
+
+### Community 3 - "PcService"
+Cohesion: 0.14
+Nodes (12): CreatePcBody, PcController, UpdatePcBody, CreatePcRequest, PcDto, PcService, UpdatePcRequest, PcStatus (+4 more)
 
 ### Community 4 - "Agent Enrollment and Security Configuration"
-Cohesion: 0.07
-Nodes (8): AgentEnrollmentController, EnrollmentRequest, EnrollmentResponse, AgentTokenAuthenticationFilter, AgentTokenService, ApiRequestLoggingFilter, OpenApiConfig, SecurityConfig
+Cohesion: 0.08
+Nodes (4): AgentTokenAuthenticationFilter, ApiRequestLoggingFilter, OpenApiConfig, SecurityConfig
 
 ### Community 5 - "System Documentation and Architecture Specs"
 Cohesion: 0.07
@@ -96,25 +102,25 @@ Nodes (37): Agent Protocol API Routes, CafeOS API Specification, Authentication 
 Cohesion: 0.06
 Nodes (31): name, import, password, url, username, web, include, enabled (+23 more)
 
-### Community 7 - "PC Agent Enrollment Client"
-Cohesion: 0.11
-Nodes (8): EnrollmentClient, HttpApiClient, AgentConfig, run(), CafeOsAgentService, serve(), start_agent(), serve()
+### Community 7 - "run"
+Cohesion: 0.17
+Nodes (6): EnrollmentClient, HttpApiClient, run(), serve(), start_agent(), serve()
 
 ### Community 8 - "Frontend Session Management View"
 Cohesion: 0.14
 Nodes (21): axios@^1.12.2, connect(), remainingLabel(), SessionManagement(), connect(), AgentToken, api, ApiEnvelope (+13 more)
 
 ### Community 9 - "PC Agent HTTP API Client"
-Cohesion: 0.14
-Nodes (6): ApiClient, HeartbeatService, AgentPayload, HeartbeatPayload, RegistrationPayload, PayloadTests
+Cohesion: 0.12
+Nodes (7): ApiClient, HeartbeatService, AgentPayload, HeartbeatPayload, RegistrationPayload, collect_pc_info(), PayloadTests
 
 ### Community 10 - "PC Agent Machine State and Identity"
-Cohesion: 0.21
+Cohesion: 0.17
 Nodes (8): load_state(), machine_id(), save_state(), state_path(), read_status(), status_path(), write_status(), AgentStateTests
 
 ### Community 11 - "PC Agent Logging and Config"
-Cohesion: 0.16
-Nodes (3): configure_logging(), main(), main()
+Cohesion: 0.13
+Nodes (5): AgentConfig, configure_logging(), main(), CafeOsAgentService, main()
 
 ### Community 12 - "Frontend Dependencies and Tailwind Setup"
 Cohesion: 0.14
@@ -133,24 +139,24 @@ Cohesion: 0.13
 Nodes (16): dependencies, lucide-react@^0.468.0, react@^19.1.1, react-dom@^19.1.1, react-hook-form@^7.62.0, react-router-dom@^7.9.4, @tanstack/react-query@^5.90.2, zod@^4.1.12 (+8 more)
 
 ### Community 16 - "Pricing Plan Domain and Endpoints"
-Cohesion: 0.23
+Cohesion: 0.25
 Nodes (6): CreatePricingPlanBody, PricingController, PricingPlanRepository, CreatePricingPlanRequest, PricingPlanDto, PricingService
 
 ### Community 17 - "Docker Compose and Postgres Service"
 Cohesion: 0.12
 Nodes (16): POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER, interval, retries, test, timeout, environment (+8 more)
 
-### Community 18 - "Backend Agent Heartbeat Endpoints"
-Cohesion: 0.31
-Nodes (7): AgentController, HeartbeatBody, RegistrationBody, AgentAcknowledgement, AgentHeartbeatRequest, AgentRegistrationRequest, AgentService
-
-### Community 19 - "Global API Error Handling"
-Cohesion: 0.28
-Nodes (3): ApiError, ApiResponse, GlobalExceptionHandler
+### Community 18 - "GamingCafeClientApp"
+Cohesion: 0.08
+Nodes (10): disable_keyboard_hook(), enable_keyboard_hook(), is_hook_active(), KBDLLHOOKSTRUCT, _low_level_keyboard_proc(), GamingCafeClientApp, confirm(), check_admin_pin() (+2 more)
 
 ### Community 20 - "Frontend TypeScript Node Config"
 Cohesion: 0.14
 Nodes (13): compilerOptions, allowImportingTsExtensions, lib, module, moduleDetection, moduleResolution, noEmit, skipLibCheck (+5 more)
+
+### Community 21 - "demo_client.py"
+Cohesion: 0.33
+Nodes (3): main(), main(), simulate_cashier_flow()
 
 ### Community 23 - "PC Agent Windows DPAPI Credentials"
 Cohesion: 0.42
@@ -160,25 +166,33 @@ Nodes (6): clear_token(), _dpapi_path(), _keyring(), load_token(), _save_dpapi()
 Cohesion: 0.50
 Nodes (4): scripts, build, check, dev
 
+### Community 34 - "GamingSession"
+Cohesion: 0.10
+Nodes (6): GamingSession, SessionStatus, ACTIVE, CANCELLED, COMPLETED, PAUSED
+
+### Community 35 - "GamingPcRepository"
+Cohesion: 0.06
+Nodes (7): AgentLivenessService, AgentTokenService, IssuedAgentToken, PcHeartbeatRepository, BranchRepository, GamingPcRepository, AgentTokenServiceTest
+
 ## Knowledge Gaps
-- **15 isolated node(s):** `com.cafeos:cafeos-backend`, `AVAILABLE`, `OCCUPIED`, `OFFLINE`, `MAINTENANCE` (+10 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 228 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **15 isolated node(s):** `AVAILABLE`, `MAINTENANCE`, `OCCUPIED`, `OFFLINE`, `com.cafeos:cafeos-backend` (+10 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 246 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `machine_id()` connect `PC Agent Machine State and Identity` to `Backend Agent Services and Credentials`, `PC Agent Logging and Config`, `PC Agent Enrollment Client`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
-- **What connects `com.cafeos:cafeos-backend`, `AVAILABLE`, `OCCUPIED` to the rest of the system?**
+- **Why does `machine_id()` connect `PC Agent Machine State and Identity` to `Backend Agent Services and Credentials`, `PC Agent Logging and Config`, `run`?**
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **What connects `AVAILABLE`, `MAINTENANCE`, `OCCUPIED` to the rest of the system?**
   _15 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Java Unit Tests and Assertions` be split into smaller, more focused modules?**
-  _Cohesion score 0.050140056022408966 - nodes in this community are weakly interconnected._
-- **Why does `GamingPc` connect `Java Unit Tests and Assertions` to `Gaming Session Management`, `Backend Agent Services and Credentials`, `Backend Agent Heartbeat Endpoints`, `Agent Liveness and Health Tracking`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
 - **Should `Backend Agent Services and Credentials` be split into smaller, more focused modules?**
-  _Cohesion score 0.06553041434028799 - nodes in this community are weakly interconnected._
-- **Why does `AgentTokenService` connect `Agent Enrollment and Security Configuration` to `Backend Agent Services and Credentials`, `Agent Liveness and Health Tracking`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+  _Cohesion score 0.06610644257703081 - nodes in this community are weakly interconnected._
+- **Why does `GamingPc` connect `GamingPc` to `Branch`, `Backend Agent Services and Credentials`, `Gaming Session Management`, `GamingPcRepository`, `PcService`, `GamingSession`, `PricingPlan`, `jakarta.persistence.PrePersist`, `uuid`?**
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **Should `Gaming Session Management` be split into smaller, more focused modules?**
-  _Cohesion score 0.061815336463223784 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06596491228070175 - nodes in this community are weakly interconnected._
+- **Why does `GamingSession` connect `GamingSession` to `Branch`, `Gaming Session Management`, `Customer`, `PricingPlan`, `jakarta.persistence.PrePersist`, `uuid`, `GamingPc`?**
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+- **Should `PcService` be split into smaller, more focused modules?**
+  _Cohesion score 0.14153846153846153 - nodes in this community are weakly interconnected._
