@@ -1,0 +1,214 @@
+.player-shell {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.player-bg {
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 168, 255, 0.18), transparent 55%),
+    linear-gradient(180deg, #080e16, var(--bg-deep));
+}
+
+.player-content {
+  position: relative; z-index: 1;
+  width: min(1200px, calc(100% - 48px));
+  margin: auto;
+  padding: 72px 0;
+  flex: 1;
+  display: flex; align-items: center;
+}
+
+.hud {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), 0 0 60px var(--accent-electric-dim);
+}
+
+.hud-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.hud-brand { display: flex; align-items: center; gap: 14px; color: var(--accent-electric); }
+.hud-brand > div { display: flex; flex-direction: column; gap: 4px; }
+.hud-cafe { font-weight: 800; font-size: 18px; color: var(--text-primary); }
+.hud-pc { font-size: 13px; color: var(--text-secondary); }
+
+.hud-status { display: flex; align-items: center; gap: 10px; color: var(--accent-electric); font-size: 12px; font-weight: 500; }
+.hud-status svg { flex-shrink: 0; }
+
+.hud-main {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  padding: 40px 32px;
+}
+
+.hud-timer {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 32px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.hud-timer::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--accent-electric-dim) 0%, transparent 50%);
+  opacity: 0.5;
+}
+.hud-timer-label {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text-secondary); font-size: 13px; font-weight: 500;
+  position: relative; z-index: 1;
+}
+.hud-timer-value {
+  margin: 20px 0; position: relative; z-index: 1;
+  color: var(--accent-electric);
+  font-size: clamp(56px, 9vw, 88px);
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  text-shadow: 0 0 30px var(--accent-electric-glow);
+}
+.hud-timer-value.low { color: #fca5a5; text-shadow: 0 0 30px rgba(239, 68, 68, 0.5); }
+.hud-timer-meta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  color: var(--text-muted); font-size: 11px;
+  position: relative; z-index: 1;
+}
+
+.hud-info {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.hud-card {
+  min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; gap: 12px;
+  padding: 24px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+.hud-card:hover { border-color: var(--border-focus); box-shadow: var(--shadow-md); }
+.hud-card span { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.hud-card strong { color: var(--text-primary); font-size: 18px; overflow-wrap: anywhere; font-weight: 600; }
+
+.hud-actions {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  padding: 22px 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+.hud-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.hud-btn:hover:not(:disabled) {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-electric);
+  color: var(--accent-electric);
+}
+.hud-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.hud-btn.danger { color: #fca5a5; border-color: var(--danger-border); background: var(--danger-bg); }
+.hud-btn.danger:hover:not(:disabled) { background: #351218; border-color: var(--danger); color: #fecaca; }
+.hud-note { color: var(--text-muted); font-size: 11px; flex: 1 1 280px; }
+
+.taskbar {
+  position: relative; z-index: 2;
+  min-height: 64px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 24px;
+  background: rgba(8, 12, 18, 0.96);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.taskbar-start, .taskbar-center, .taskbar-end { display: flex; align-items: center; gap: 12px; }
+.taskbar-center { flex: 1; justify-content: center; }
+.taskbar-end { justify-content: flex-end; }
+
+.taskbar-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.taskbar-btn:hover:not(:disabled) { background: var(--bg-panel); border-color: var(--border-default); color: var(--text-primary); }
+.taskbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.taskbar-btn.brand { color: var(--accent-electric); font-weight: 700; }
+.taskbar-btn.brand:hover { color: var(--accent-electric); background: var(--accent-electric-dim); }
+.taskbar-btn.active { background: var(--accent-electric-dim); border-color: var(--accent-electric); color: var(--accent-electric); }
+.taskbar-btn.danger { color: #fca5a5; }
+.taskbar-btn.danger:hover { background: var(--danger-bg); border-color: var(--danger-border); color: #fecaca; }
+
+.taskbar-divider { height: 28px; width: 1px; background: var(--border-default); }
+
+.taskbar-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.taskbar-dot.live { background: var(--accent-electric); box-shadow: 0 0 12px var(--accent-electric); animation: pulse 2s infinite; }
+.taskbar-dot.idle { background: var(--text-muted); }
+
+.taskbar-sub, .taskbar-pending small, .taskbar-clock small { color: var(--text-muted); font-size: 10px; }
+
+.taskbar-pending {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-muted); font-size: 11px;
+  padding: 6px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+.taskbar-pending small { margin-left: 4px; }
+.taskbar-empty { color: var(--text-muted); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+
+.taskbar-clock {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+  color: var(--text-primary); font-size: 13px; font-variant-numeric: tabular-nums; font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .hud-main { grid-template-columns: 1fr; }
+  .hud-info { grid-template-columns: 1fr 1fr; }
+  .taskbar { flex-wrap: wrap; padding: 8px 14px; }
+  .taskbar-center { order: 3; flex-basis: 100%; justify-content: flex-start; }
+  .taskbar-end { margin-left: auto; }
+  .player-content { width: calc(100% - 24px); padding: 40px 0; }
+  .hud-top, .hud-main, .hud-actions { padding: 24px; }
+  .hud-card { padding: 18px; }
+  .hud-timer-value { font-size: 48px; }
+}
+
+@media (max-width: 480px) {
+  .player-content { width: calc(100% - 16px); padding: 28px 0; }
+  .hud-top, .hud-main, .hud-actions { padding: 18px; }
+  .hud-info { grid-template-columns: 1fr 1fr; }
+  .hud-card { padding: 16px; }
+  .taskbar { padding: 8px 10px; }
+  .taskbar-pending small { display: none; }
+  .taskbar-btn span:not(.brand) { display: none; }
+  .taskbar-btn { padding: 10px; }
+  .taskbar-clock small { display: none; }
+}
