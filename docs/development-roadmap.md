@@ -2,6 +2,13 @@
 
 The phases remain in the product's agreed order. Status reflects the repository today; an item marked partial is useful for local development but is not a commercial-ready implementation.
 
+Current agent status: enrollment, registration, heartbeats, protected local
+token storage, atomic state, configurable logging, Windows Service and tray
+entry points, PyInstaller configuration, authenticated PC-scoped session
+status, and the PC-user countdown display are implemented for pilot use.
+WebSockets, installer automation, and production enrollment approval remain
+outstanding.
+
 1. **Foundation — implemented:** modular-monolith backend, Flyway/PostgreSQL, API envelope and errors, health/OpenAPI, React shell, Python agent package, local `.env` configuration.
 2. **Authentication — placeholder only:** Spring HTTP Basic with one local development account. CafeOS user provisioning, JWT rotation, roles, and branch authorization remain required.
 3. **PC management — implemented for the starter:** cafe/branch setup, PC list/create/update, dashboard inventory, one-time token issuance and token rotation.
@@ -22,8 +29,9 @@ The phases remain in the product's agreed order. Status reflects the repository 
 - [ ] Add Testcontainers PostgreSQL migration/invariant and session concurrency tests.
 - [x] Surface recent session activity on the overview dashboard with automatic refresh.
 - [x] Use a 30-minute session extension action in the dashboard.
-- [ ] Add TLS and protected credential storage (Windows Credential Manager/DPAPI); stop storing agent tokens in plaintext `.env` for production.
+- [x] Add Windows Credential Manager/DPAPI token storage with an explicit development-only plaintext fallback.
 - [ ] Add bounded heartbeat retention/partitioning and an auditable agent credential revocation workflow.
 - [ ] Implement authenticated WebSocket event delivery and REST reconciliation.
-- [ ] Implement Windows Service, separate user-session tray, PyInstaller and Inno Setup packaging.
+- [x] Implement Windows Service, separate user-session tray, PyInstaller spec, and PC-user session display.
+- [ ] Add Inno Setup packaging and automatic Service/tray startup.
 - [ ] Document backup restore procedure and production deployment hardening.

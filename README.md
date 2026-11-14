@@ -26,3 +26,9 @@ The compose service starts PostgreSQL only. Backend configuration defaults suppo
 `cd backend; mvn test` · `cd frontend; npm run build` · `cd pc-agent; python -m compileall agent`
 
 See [architecture](docs/architecture.md), [roadmap](docs/development-roadmap.md), and [agent notes](pc-agent/README.md).
+
+The Windows agent now includes a PC-user session display. Run the background
+agent with `python -m agent.main` and the display with `python -m agent.ui`.
+The display reads an authenticated, PC-scoped session snapshot and presents a
+server-authoritative countdown. See [Windows Agent setup](docs/windows-agent.md)
+for the complete deployment guide.
